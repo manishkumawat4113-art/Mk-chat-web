@@ -155,9 +155,9 @@ function markMessagesAsRead() {
 
     socket.emit("read_messages", {
         senderId: selectedUserId
-    });*/
+    });
 
-}
+}*/
 
 // ============================================================
 // HTML ELEMENTS
