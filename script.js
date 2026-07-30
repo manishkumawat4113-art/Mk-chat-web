@@ -8,32 +8,64 @@ const BACKEND_URL ="https://mk-web-backend.onrender.com";
 // ============================================================
 // SOCKET.IO CONNECTION
 // ============================================================
+let socketConnected = false;
+
 const socket = io(BACKEND_URL, {
+
     transports: ["websocket", "polling"],
+
     reconnection: true,
+
     reconnectionAttempts: Infinity,
+
     reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000
+
+    reconnectionDelayMax: 5000,
+
+    timeout: 20000
+
 });
 
 // ============================================================
 // SOCKET CONNECTED
 // ============================================================
-socket.on("connect",function(){
- console.log("✅ Socket connected:",
-        socket.id );
- // Login user ko personal room me join karvao
+socket.on("connect", function () {
+
+    socketConnected = true;
+
+    console.log(
+        "🟢 Socket connected:",
+        socket.id
+    );
+
     joinUserRoom();
-        markMessagesAsRead();
-        
+
 });
+socket.on("disconnect", function (reason) {
+
+    socketConnected = false;
+
+    console.log(
+        "🔴 Socket disconnected:",
+        reason
+    );
+
+});
+
 
 // ============================================================
 // SOCKET ERROR
 // ============================================================
 socket.on("connect_error", function (error) {
-console.error("❌ Socket connection error:",error);
-   });
+
+    socketConnected = false;
+
+    console.error(
+        "🟡 Socket connection error:",
+        error.message
+    );
+
+});
 
 // ============================================================
 // USER STATUS
@@ -1113,12 +1145,13 @@ editProfileBtn.addEventListener(
 
             chatScreen.style.display =
                 "block";
-
+markMessagesAsRead();
+        }
 
             // Chat load
             loadUserStatus();
             loadMessages();
-            markMessagesAsRead();
+            
         
 
         }
