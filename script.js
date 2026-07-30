@@ -1786,7 +1786,19 @@ socket.on(
     }
 
     showMessage(message);
+if (
+    document.visibilityState === "visible"
+) {
 
+    socket.emit(
+        "read_messages",
+        {
+            senderId:
+                message.senderId
+        }
+    );
+
+}
         }
 
         // ====================================================
