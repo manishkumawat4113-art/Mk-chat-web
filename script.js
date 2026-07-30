@@ -117,6 +117,26 @@ socket.on("message_delivered", function (data) {
     }
 
 });
+// ============================================================
+// MESSAGE SAVED
+// ============================================================
+
+socket.on("message_saved", function (data) {
+
+    console.log(
+        "💾 Message saved:",
+        data.clientMessageId
+    );
+
+    if (data.clientMessageId) {
+
+        removePendingMessage(
+            data.clientMessageId
+        );
+
+    }
+
+});
 
 
 // ============================================================
