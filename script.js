@@ -1115,7 +1115,7 @@ editProfileBtn.addEventListener(
 
             chatScreen.style.display =
                 "block";
-        }
+        
 
             // Chat load
             loadUserStatus();
