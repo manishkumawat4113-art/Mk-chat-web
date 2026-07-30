@@ -1776,31 +1776,39 @@ socket.on(
         if (isCurrentChat) {
 
     // Optimistic message already screen par hai
-    if (
+    const existingMessage =
         message.clientMessageId &&
         document.querySelector(
             `[data-client-message-id="${message.clientMessageId}"]`
-        )
-    ) {
-        return;
+        );
+
+
+    // Sirf tab show karo jab duplicate nahi hai
+    if (!existingMessage) {
+
+        showMessage(message);
+
     }
 
-    showMessage(message);
-if (
-    document.visibilityState === "visible"
-) {
 
-    socket.emit(
-        "read_messages",
-        {
-            senderId:
-                message.senderId
+    // 💙 Read status ALWAYS process hoga
+    if (
+        String(message.senderId) ===
+        String(selectedUserId) &&
+        document.visibilityState === "visible"
+    ) {
+
+        socket.emit(
+            "read_messages",
+            {
+                senderId:
+                    message.senderId
+            }
+        );
+
+    }
+
         }
-    );
-
-}
-        }
-
         // ====================================================
         // DELIVERY CONFIRMATION
         // Only receiver sends this
