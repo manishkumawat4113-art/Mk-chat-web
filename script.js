@@ -23,6 +23,7 @@ socket.on("connect", function () {
     );
 
     joinUserRoom();
+        retryPendingMessages();
 
 });
 
@@ -1293,7 +1294,70 @@ function markMessagesAsRead() {
 
 }
 
+// ============================================================
+// OFFLINE MESSAGE QUEUE
+// ============================================================
 
+let pendingMessages =
+    JSON.parse(
+        localStorage.getItem("pendingMessages") || "[]"
+    );
+
+function savePendingMessages() {
+
+    localStorage.setItem(
+        "pendingMessages",
+        JSON.stringify(pendingMessages)
+    );
+}
+
+function queueMessage(message) {
+
+    pendingMessages.push(message);
+
+    savePendingMessages();
+}
+
+function removePendingMessage(clientMessageId) {
+
+    pendingMessages =
+        pendingMessages.filter(
+            function (message) {
+
+                return (
+                    message.clientMessageId !==
+                    clientMessageId
+                );
+
+            }
+        );
+
+    savePendingMessages();
+}
+async function retryPendingMessages() {
+
+    if (!socket.connected) {
+        return;
+    }
+
+    if (pendingMessages.length === 0) {
+        return;
+    }
+
+    const messagesToSend =
+        [...pendingMessages];
+
+    for (
+        const message of messagesToSend
+    ) {
+
+        socket.emit(
+            "send_message",
+            message
+        );
+
+    }
+}
 // ============================================================
 // SEND OR EDIT MESSAGE
 // ============================================================
@@ -1356,32 +1420,84 @@ async function sendMessage() {
     }
 
 
-    if (
-        !socket.connected
-    ) {
+    if (!socket.connected) {
 
-        alert(
-            "Server se connection nahi hai"
-        );
+    const clientMessageId =
+        crypto.randomUUID();
 
-        return;
+    const pendingMessage = {
 
+        senderId: currentUser.id,
+
+        receiverId: selectedUserId,
+
+        text: text,
+
+        clientMessageId: clientMessageId,
+
+        replyTo: selectedReply
+            ? {
+                messageId:
+                    selectedReply._id,
+
+                senderId:
+                    selectedReply.senderId,
+
+                text:
+                    selectedReply.text
+            }
+            : null
+    };
+
+    queueMessage(
+        pendingMessage
+    );
+
+    messageInput.value = "";
+
+    selectedReply = null;
+
+    console.log(
+        "📦 Message queued:",
+        clientMessageId
+    );
+
+    return;
     }
 
-
     // Send message through Socket.IO
-socket.emit("send_message", {
+const clientMessageId =
+    crypto.randomUUID();
+
+const outgoingMessage = {
+
     senderId: currentUser.id,
+
     receiverId: selectedUserId,
+
     text: text,
+
+    clientMessageId:
+        clientMessageId,
+
     replyTo: selectedReply
         ? {
-              messageId: selectedReply._id,
-              senderId: selectedReply.senderId,
-              text: selectedReply.text
-          }
+            messageId:
+                selectedReply._id,
+
+            senderId:
+                selectedReply.senderId,
+
+            text:
+                selectedReply.text
+        }
         : null
-});
+};
+
+socket.emit(
+    "send_message",
+    outgoingMessage
+);
 
 // 👇 ISKE BAAD
 loadChats();
