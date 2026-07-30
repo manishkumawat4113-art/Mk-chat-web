@@ -1354,57 +1354,13 @@ function removePendingMessage(clientMessageId) {
 
     savePendingMessages();
 }
-function removePendingMessage(clientMessageId) {
 
-    pendingMessages =
-        pendingMessages.filter(
-            function (message) {
-
-                return (
-                    message.clientMessageId !==
-                    clientMessageId
-                );
-
-            }
-        );
-
-    savePendingMessages();
-}
 
 
 // ============================================================
 // RETRY PENDING MESSAGES
 // ============================================================
 
-function retryPendingMessages() {
-
-    if (!socket.connected) {
-        return;
-    }
-
-    if (pendingMessages.length === 0) {
-        return;
-    }
-
-    const messagesToSend =
-        [...pendingMessages];
-
-    messagesToSend.forEach(
-        function (message) {
-
-            console.log(
-                "🔄 Retrying message:",
-                message.clientMessageId
-            );
-
-            socket.emit(
-                "send_message",
-                message
-            );
-
-        }
-    );
-}
 
 async function retryPendingMessages() {
 
@@ -1565,6 +1521,9 @@ const outgoingMessage = {
         }
         : null
 };
+    showOptimisticMessage(
+    outgoingMessage
+);
 
 socket.emit(
     "send_message",
@@ -1816,10 +1775,19 @@ socket.on(
 
         if (isCurrentChat) {
 
-            showMessage(message);
+    // Optimistic message already screen par hai
+    if (
+        message.clientMessageId &&
+        document.querySelector(
+            `[data-client-message-id="${message.clientMessageId}"]`
+        )
+    ) {
+        return;
+    }
+
+    showMessage(message);
 
         }
-
 
         // ====================================================
         // DELIVERY CONFIRMATION
@@ -1849,6 +1817,28 @@ socket.on(
 
     }
 );
+
+function showOptimisticMessage(message) {
+
+    const optimisticMessage = {
+        _id: message.clientMessageId,
+        id: message.clientMessageId,
+        clientMessageId: message.clientMessageId,
+
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+
+        text: message.text,
+
+        status: "sending",
+
+        replyTo: message.replyTo || null
+    };
+
+    showMessage(
+        optimisticMessage
+    );
+}
 
 
 // ============================================================
@@ -1901,6 +1891,12 @@ function showMessage(message) {
         String(
             messageId
         );
+    if (message.clientMessageId) {
+
+    div.dataset.clientMessageId =
+        message.clientMessageId;
+
+    }
 
 
     // ========================================================
