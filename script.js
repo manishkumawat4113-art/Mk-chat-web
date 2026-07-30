@@ -8,9 +8,13 @@ const BACKEND_URL ="https://mk-web-backend.onrender.com";
 // ============================================================
 // SOCKET.IO CONNECTION
 // ============================================================
-const socket =io(BACKEND_URL, {
-        transports: ["polling", "websocket"]
-    });
+const socket = io(BACKEND_URL, {
+    transports: ["websocket", "polling"],
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000
+});
 
 // ============================================================
 // SOCKET CONNECTED
@@ -20,6 +24,8 @@ socket.on("connect",function(){
         socket.id );
  // Login user ko personal room me join karvao
     joinUserRoom();
+        markMessagesAsRead();
+        
 });
 
 // ============================================================
@@ -136,6 +142,20 @@ socket.on("messages_read", function (data) {
 
         });
 });
+function markMessagesAsRead() {
+
+    const selectedUserId =
+        localStorage.getItem("selectedUserId");
+
+    if (!selectedUserId) return;
+
+    if (!socket.connected) return;
+
+    socket.emit("read_messages", {
+        senderId: selectedUserId
+    });
+
+}
 
 // ============================================================
 // HTML ELEMENTS
