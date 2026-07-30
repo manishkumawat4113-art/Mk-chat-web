@@ -144,7 +144,7 @@ socket.on("messages_read", function (data) {
                 "#2196F3";
 
         });
-});
+});/*
 function markMessagesAsRead() {
 
     const selectedUserId =
@@ -156,7 +156,7 @@ function markMessagesAsRead() {
 
     socket.emit("read_messages", {
         senderId: selectedUserId
-    });
+    });*/
 
 }
 
