@@ -1118,6 +1118,7 @@ editProfileBtn.addEventListener(
             // Chat load
             loadUserStatus();
             loadMessages();
+            markMessagesAsRead();
         
 
         }
@@ -1272,6 +1273,21 @@ function joinUserRoom() {
         );
 
     }
+
+}
+
+function markMessagesAsRead() {
+
+    const selectedUserId =
+        localStorage.getItem("selectedUserId");
+
+    if (!selectedUserId) return;
+
+    if (!socket.connected) return;
+
+    socket.emit("read_messages", {
+        senderId: selectedUserId
+    });
 
 }
 
