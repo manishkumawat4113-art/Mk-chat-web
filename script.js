@@ -8,47 +8,24 @@ const BACKEND_URL ="https://mk-web-backend.onrender.com";
 // ============================================================
 // SOCKET.IO CONNECTION
 // ============================================================
-let socketConnected = false;
-
 const socket = io(BACKEND_URL, {
-
     transports: ["websocket", "polling"],
-
     reconnection: true,
-
     reconnectionAttempts: Infinity,
-
     reconnectionDelay: 1000,
-
-    reconnectionDelayMax: 5000,
-
-    timeout: 20000
-
+    reconnectionDelayMax: 5000
 });
-
 // ============================================================
 // SOCKET CONNECTED
 // ============================================================
 socket.on("connect", function () {
 
-    socketConnected = true;
-
     console.log(
-        "🟢 Socket connected:",
+        "✅ Socket connected:",
         socket.id
     );
 
     joinUserRoom();
-
-});
-socket.on("disconnect", function (reason) {
-
-    socketConnected = false;
-
-    console.log(
-        "🔴 Socket disconnected:",
-        reason
-    );
 
 });
 
@@ -58,15 +35,12 @@ socket.on("disconnect", function (reason) {
 // ============================================================
 socket.on("connect_error", function (error) {
 
-    socketConnected = false;
-
     console.error(
-        "🟡 Socket connection error:",
-        error.message
+        "❌ Socket connection error:",
+        error
     );
 
 });
-
 // ============================================================
 // USER STATUS
 // ============================================================
