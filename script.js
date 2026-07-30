@@ -1793,20 +1793,13 @@ socket.on(
 
     // 💙 Read status ALWAYS process hoga
     if (
-        String(message.senderId) ===
-        String(selectedUserId) &&
-        document.visibilityState === "visible"
-    ) {
+    String(message.senderId) ===
+    String(selectedUserId)
+) {
 
-        socket.emit(
-            "read_messages",
-            {
-                senderId:
-                    message.senderId
-            }
-        );
+    markMessagesAsRead();
 
-    }
+}
 
         }
         // ====================================================
