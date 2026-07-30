@@ -1116,7 +1116,6 @@ editProfileBtn.addEventListener(
 
             chatScreen.style.display =
                 "block";
-markMessagesAsRead();
         }
 
             // Chat load
