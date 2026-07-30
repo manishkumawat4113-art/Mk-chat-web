@@ -1794,12 +1794,13 @@ socket.on(
     // 💙 Read status ALWAYS process hoga
     if (
     String(message.senderId) ===
-    String(selectedUserId)
+    String(selectedUserId) &&
+    chatScreen.style.display !== "none"
 ) {
 
     markMessagesAsRead();
 
-}
+    }
 
         }
         // ====================================================
