@@ -8,13 +8,10 @@ const BACKEND_URL ="https://mk-web-backend.onrender.com";
 // ============================================================
 // SOCKET.IO CONNECTION
 // ============================================================
-const socket = io(BACKEND_URL, {
-    transports: ["websocket", "polling"],
-    reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000
-});
+const socket =
+    io(BACKEND_URL, {
+        transports: ["polling", "websocket"]
+    });
 // ============================================================
 // SOCKET CONNECTED
 // ============================================================
