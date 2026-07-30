@@ -1334,6 +1334,58 @@ function removePendingMessage(clientMessageId) {
 
     savePendingMessages();
 }
+function removePendingMessage(clientMessageId) {
+
+    pendingMessages =
+        pendingMessages.filter(
+            function (message) {
+
+                return (
+                    message.clientMessageId !==
+                    clientMessageId
+                );
+
+            }
+        );
+
+    savePendingMessages();
+}
+
+
+// ============================================================
+// RETRY PENDING MESSAGES
+// ============================================================
+
+function retryPendingMessages() {
+
+    if (!socket.connected) {
+        return;
+    }
+
+    if (pendingMessages.length === 0) {
+        return;
+    }
+
+    const messagesToSend =
+        [...pendingMessages];
+
+    messagesToSend.forEach(
+        function (message) {
+
+            console.log(
+                "🔄 Retrying message:",
+                message.clientMessageId
+            );
+
+            socket.emit(
+                "send_message",
+                message
+            );
+
+        }
+    );
+}
+
 async function retryPendingMessages() {
 
     if (!socket.connected) {
