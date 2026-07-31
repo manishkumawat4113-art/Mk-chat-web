@@ -97,7 +97,7 @@ if (
         );
 }
 
-    if (!messageDiv) {
+   /* if (!messageDiv) {
 
         console.log(
             "Message div nahi mila:",
@@ -106,8 +106,10 @@ if (
 
         return;
 
-    }
+    }*/
 
+    if (messageDiv) {
+        
 
     const status =
         messageDiv.querySelector(
@@ -115,16 +117,22 @@ if (
         );
 
 
-    if (status) {
+if (status) {
 
-        status.textContent =
-            "✓✓";
-
-        status.style.color =
-            "";
-
+    // Agar already READ hai to blue hi rehne do
+    if (
+        status.textContent === "✓✓" &&
+        status.style.color
+    ) {
+        return;
     }
 
+    status.textContent = "✓✓";
+    status.style.color = "";
+}
+}
+loadChats();
+        
 });
 // ============================================================
 // MESSAGE SAVED
