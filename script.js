@@ -2017,7 +2017,7 @@ if (message.edited === true) {
 div.appendChild(
     textSpan
 );
-/*let timeSpan =
+let timeSpan =
     document.createElement(
         "span"
     );
@@ -2035,11 +2035,10 @@ timeSpan.textContent =
             minute: "2-digit"
         }
     );
-: "Time";
 div.appendChild(
     timeSpan
 );   
-*/
+
 
     // ========================================================
     // USER ID CHECK
