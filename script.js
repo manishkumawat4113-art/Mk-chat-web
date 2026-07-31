@@ -852,12 +852,6 @@ profileScreenClose.addEventListener(
         profileScreen.style.display =
             "none";
 
-        homeScreen.style.display =
-            "none";
-
-        chatScreen.style.display =
-            "block";
-
     }
 );
 
@@ -1010,10 +1004,7 @@ searchInput.addEventListener(
                                 user._id
                             );
 
-                            localStorage.setItem(
-    "profileFrom",
-    "search"
-);
+                    
 
 
                             // Profile show
@@ -3624,11 +3615,7 @@ div.addEventListener(
                     chat.userId
                 );
 
-                localStorage.setItem(
-    "profileFrom",
-    "chat"
-);
-
+                
 
                 document.querySelector(
                     "#profileName"
