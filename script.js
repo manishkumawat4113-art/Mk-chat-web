@@ -1012,7 +1012,18 @@ searchInput.addEventListener(
                             ).textContent =
                                 "👤 " +
                                 user.username;
+document.querySelector(
+        "#chatUserName"
+    ).onclick =
+        function () {
 
+            // Same user ki profile information
+            document.querySelector(
+                "#profileName"
+            ).textContent =
+                "👤 " +
+                chat.username;
+                             
 
                             document.querySelector(
                                 "#profileEmail"
