@@ -1928,6 +1928,22 @@ function showMessage(message) {
         message.clientMessageId;
 
     }
+    let timeSpan =
+    document.createElement("span");
+
+timeSpan.className =
+    "messageTime";
+
+timeSpan.textContent =
+    message.createdAt
+    ? new Date(message.createdAt)
+        .toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+    : "Time";
+
+div.appendChild(timeSpan);
 
 
     // ========================================================
