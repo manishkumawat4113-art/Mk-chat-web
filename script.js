@@ -1012,17 +1012,6 @@ searchInput.addEventListener(
                             ).textContent =
                                 "👤 " +
                                 user.username;
-document.querySelector(
-        "#chatUserName"
-    ).onclick =
-        function () {
-
-            // Same user ki profile information
-            document.querySelector(
-                "#profileName"
-            ).textContent =
-                "👤 " +
-                chat.username;
                              
 
                             document.querySelector(
@@ -3592,27 +3581,97 @@ minute:"2-digit"
 
 `;
 
-div.addEventListener("click", function () {
+div.addEventListener(
+    "click",
+    function () {
 
-    localStorage.setItem(
-        "selectedUserId",
-        chat.userId
-    );
+        localStorage.setItem(
+            "selectedUserId",
+            chat.userId
+        );
 
-    document.querySelector(
-        "#chatUserName"
-    ).textContent =
-        chat.username;
 
-    homeScreen.style.display =
-        "none";
+        // Chat username element
+        const chatUserName =
+            document.querySelector(
+                "#chatUserName"
+            );
 
-    chatScreen.style.display =
-        "block";
-loadUserStatus();
-    loadMessages();
 
-});
+        chatUserName.textContent =
+            chat.username;
+
+
+        // ==================================================
+        // USERNAME CLICK → PROFILE
+        // ==================================================
+
+        chatUserName.onclick =
+            function () {
+
+                localStorage.setItem(
+                    "selectedUserId",
+                    chat.userId
+                );
+
+
+                document.querySelector(
+                    "#profileName"
+                ).textContent =
+                    "👤 " +
+                    chat.username;
+
+
+                document.querySelector(
+                    "#profileEmail"
+                ).textContent =
+                    chat.email ||
+                    "";
+
+
+                document.querySelector(
+                    "#profileBio"
+                ).textContent =
+                    chat.bio ||
+                    "Hello! I'm using MK Chat";
+
+
+                editProfileBtn.textContent =
+                    "Message";
+
+
+                editProfileBtn.dataset.mode =
+                    "message";
+
+
+                chatScreen.style.display =
+                    "none";
+
+
+                profileScreen.style.display =
+                    "block";
+
+            };
+
+
+        // ==================================================
+        // OPEN CHAT
+        // ==================================================
+
+        homeScreen.style.display =
+            "none";
+
+
+        chatScreen.style.display =
+            "block";
+
+
+        loadUserStatus();
+
+        loadMessages();
+
+    }
+);
 
 chatList.appendChild(
 div
