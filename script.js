@@ -1928,7 +1928,7 @@ function showMessage(message) {
         message.clientMessageId;
 
     }
-    let timeSpan =
+    /*let timeSpan =
     document.createElement("span");
 
 timeSpan.className =
@@ -1944,8 +1944,8 @@ timeSpan.textContent =
     : "Time";
     div.appendChild(
     timeSpan
-);
-    // ========================================================
+);*/
+    //6 ========================================================
     // MESSAGE TEXT
     // ========================================================
 
