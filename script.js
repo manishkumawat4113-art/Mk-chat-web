@@ -3514,6 +3514,12 @@ div.innerHTML=
 
 ${chat.lastMessage}
 
+${
+    chat.lastMessageStatus === "delivered"
+        ? " ✓✓"
+        : ""
+}
+
 </p>
 
 </div>
