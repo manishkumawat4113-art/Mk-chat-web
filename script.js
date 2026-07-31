@@ -1860,7 +1860,7 @@ function showOptimisticMessage(message) {
         receiverId: message.receiverId,
 
         text: message.text,
-
+createdAt: message.createdAt,
         status: "sending",
 
         replyTo: message.replyTo || null
