@@ -3523,21 +3523,6 @@ div.innerHTML=
 
 ${chat.lastMessage}
 
-${
-    String(chat.lastMessageSenderId) ===
-    String(currentUser.id)
-    ?
-    (
-        chat.lastMessageStatus === "read"
-        ? " <span style='color:#2196F3'>✓✓</span>"
-        :
-        chat.lastMessageStatus === "delivered"
-        ? " ✓✓"
-        : " ✓"
-    )
-    : ""
-}
-
 </p>
 
 </div>
