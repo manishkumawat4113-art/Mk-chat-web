@@ -1941,7 +1941,7 @@ timeSpan.textContent =
             hour: "2-digit",
             minute: "2-digit"
         })
-    : "Time";
+    : "";
     div.appendChild(
     timeSpan
 );
