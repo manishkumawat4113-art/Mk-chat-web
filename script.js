@@ -3455,7 +3455,10 @@ clearChatBtn.addEventListener(
 );
 
 async function loadChats(){
-
+let currentUser =
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
 let token=
 localStorage.getItem(
 "token"
