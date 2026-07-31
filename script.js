@@ -1524,7 +1524,9 @@ const outgoingMessage = {
 
     clientMessageId:
         clientMessageId,
-
+    
+createdAt: new Date().toISOString(),
+    
     replyTo: selectedReply
         ? {
             messageId:
