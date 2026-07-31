@@ -852,6 +852,33 @@ profileScreenClose.addEventListener(
         profileScreen.style.display =
             "none";
 
+
+        const profileFrom =
+            localStorage.getItem(
+                "profileFrom"
+            );
+
+
+        if (
+            profileFrom === "chat"
+        ) {
+
+            chatScreen.style.display =
+                "block";
+
+        }
+        else {
+
+            homeScreen.style.display =
+                "block";
+
+        }
+
+
+        localStorage.removeItem(
+            "profileFrom"
+        );
+
     }
 );
 
@@ -1004,6 +1031,11 @@ searchInput.addEventListener(
                                 "selectedUserId",
                                 user._id
                             );
+
+                            localStorage.setItem(
+    "profileFrom",
+    "search"
+);
 
 
                             // Profile show
@@ -3613,6 +3645,11 @@ div.addEventListener(
                     "selectedUserId",
                     chat.userId
                 );
+
+                localStorage.setItem(
+    "profileFrom",
+    "chat"
+);
 
 
                 document.querySelector(
