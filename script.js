@@ -852,36 +852,14 @@ profileScreenClose.addEventListener(
         profileScreen.style.display =
             "none";
 
+        homeScreen.style.display =
+            "none";
 
-        const profileFrom =
-            localStorage.getItem(
-                "profileFrom"
-            );
-
-
-        if (
-            profileFrom === "chat"
-        ) {
-
-            chatScreen.style.display =
-                "block";
-
-        }
-        else {
-
-            homeScreen.style.display =
-                "block";
-
-        }
-
-
-        localStorage.removeItem(
-            "profileFrom"
-        );
+        chatScreen.style.display =
+            "block";
 
     }
 );
-
 
 // ============================================================
 // SEARCH USER
