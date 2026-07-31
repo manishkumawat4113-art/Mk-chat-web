@@ -122,7 +122,7 @@ if (status) {
         status.textContent === "✓✓" &&
         status.style.color
     ) {
-        return;
+       /* return;*/
     }
 
     status.textContent = "✓✓";
