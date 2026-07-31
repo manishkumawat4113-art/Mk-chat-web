@@ -2016,27 +2016,6 @@ if (message.edited === true) {
 div.appendChild(
     textSpan
 );
-/*let timeSpan =
-    document.createElement(
-        "span"
-    );
-
-timeSpan.className =
-    "messageTime";
-
-timeSpan.textContent =
-    new Date(
-        message.createdAt
-    ).toLocaleTimeString(
-        [],
-        {
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    );
-div.appendChild(
-    timeSpan
-);  */ 
 
 
     // ========================================================
