@@ -82,11 +82,20 @@ socket.on("message_delivered", function (data) {
     );
 
 
-    const messageDiv =
-        document.querySelector(
-            `[data-message-id="${data.messageId}"]`
-        );
+    let messageDiv =
+    document.querySelector(
+        `[data-message-id="${data.messageId}"]`
+    );
 
+if (
+    !messageDiv &&
+    data.clientMessageId
+) {
+    messageDiv =
+        document.querySelector(
+            `[data-client-message-id="${data.clientMessageId}"]`
+        );
+}
 
     if (!messageDiv) {
 
