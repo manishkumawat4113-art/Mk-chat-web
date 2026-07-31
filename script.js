@@ -23,7 +23,6 @@ socket.on("connect", function () {
 
     joinUserRoom();
         retryPendingMessages();
-
 });
 
 // ============================================================
