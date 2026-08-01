@@ -3589,6 +3589,7 @@ div.addEventListener(
         localStorage.setItem(
             "selectedUserId",
             chat.userId
+            
         );
 
 
@@ -3646,8 +3647,8 @@ div.addEventListener(
                     "message";
 
 
-                /*chatScreen.style.display =
-                  "none";*/
+                chatScreen.style.display =
+                  "none";
 
 
                 profileScreen.style.display =
