@@ -851,6 +851,10 @@ profileScreenClose.addEventListener(
 
         profileScreen.style.display =
             "none";
+        homeScreen.style.display =
+           "block";
+        
+        
 
     }
 );
@@ -3647,14 +3651,13 @@ div.addEventListener(
                     "message";
 
 
-              /*  chatScreen.style.display =*/
-                  /*"none";*/
+               chatScreen.style.display =
+                  "none";
 
 
                 profileScreen.style.display =
                     "block";
-                homeScreen.style.display =
-           "block";
+                
                 
 
             };
