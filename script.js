@@ -3646,8 +3646,8 @@ div.addEventListener(
                     "message";
 
 
-                //chatScreen.style.display =
-                   // "none";
+               // chatScreen.style.display =
+                  // "none";
 
 
                 profileScreen.style.display =
@@ -3660,12 +3660,12 @@ div.addEventListener(
         // OPEN CHAT
         // ==================================================
 
-        homeScreen.style.display =
-            "none";
+        //homeScreen.style.display =
+        //    "none";
 
 
-        chatScreen.style.display =
-            "block";
+      //  chatScreen.style.display =
+           // "block";
 
 
         loadUserStatus();
