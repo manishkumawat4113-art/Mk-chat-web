@@ -851,8 +851,6 @@ profileScreenClose.addEventListener(
 
         profileScreen.style.display =
             "none";
-        homeScreen.style.display =
-           "block";
         
         
 
