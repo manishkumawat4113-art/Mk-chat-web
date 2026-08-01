@@ -3668,9 +3668,9 @@ div.addEventListener(
            // "block";
 
 
-        loadUserStatus();
+       // loadUserStatus();
 
-        loadMessages();
+       // loadMessages();
 
     }
 );
