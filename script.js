@@ -177,7 +177,7 @@ socket.on("messages_read", function (data) {
             status.style.color =
                 "#2196F3";
 
-        });
+     });
 });/*
 function markMessagesAsRead() {
 
