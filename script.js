@@ -3653,6 +3653,9 @@ div.addEventListener(
 
                 profileScreen.style.display =
                     "block";
+                homeScreen.style.display =
+           "block";
+                
 
             };
 
