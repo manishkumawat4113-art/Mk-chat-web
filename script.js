@@ -194,6 +194,24 @@ function markMessagesAsRead() {
 
 }*/
 
+function getMongoMessageId(message) {
+    if (
+        message?._id &&
+        message._id !== message.clientMessageId
+    ) {
+        return String(message._id);
+    }
+
+    return null;
+}
+
+function getClientMessageId(message) {
+    return (
+        message?.clientMessageId ||
+        null
+    );
+}
+
 // ============================================================
 // HTML ELEMENTS
 // ============================================================
