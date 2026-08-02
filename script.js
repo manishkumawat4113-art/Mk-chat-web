@@ -1918,9 +1918,7 @@ function showMessage(message) {
     // ========================================================
 
     let messageId =
-        message._id ||
-        message.id;
-
+    getMongoMessageId(message);
 
     // ========================================================
     // MESSAGE DIV
@@ -2116,19 +2114,27 @@ div.appendChild(statusSpan);
 
 
         deleteBtn.addEventListener(
-            "click",
-            function (event) {
+    "click",
+    function (event) {
 
-                event.stopPropagation();
+        event.stopPropagation();
 
+        if (!messageId) {
 
-                deleteMessage(
-                    messageId,
-                    div
-                );
+            alert(
+                "Message abhi server par save ho raha hai. Thodi der baad try karo."
+            );
 
-            }
+            return;
+        }
+
+        deleteMessage(
+            messageId,
+            div
         );
+
+    }
+);
 
 
         div.appendChild(
