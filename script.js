@@ -43,28 +43,6 @@ socket.on("user_status", function (data) {
  console.log("USER STATUS:",data);
    });
 
-// ============================================================
-// RECEIVE MESSAGE
-// ============================================================
-/*socket.on("receive_message", function (data) {
-console.log(
-        "📩 Receive Message:",
-        data
-    );
-
-    // Message screen par dikhao
-    showMessage(data);
-
-
-    // Receiver backend ko batayega
-    // ki message receive ho gaya
-    socket.emit(
-        "message_received",
-        {
-            messageId: data._id
-        }
-    
-});*/
 
 
 // ============================================================
