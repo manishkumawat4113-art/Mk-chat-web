@@ -1833,9 +1833,9 @@ socket.on(
         existingMessage.dataset.clientMessageId =
             message.clientMessageId;
 
-    }
+    }*/
 
-}*/
+}
 else {
 
     showMessage(message);
