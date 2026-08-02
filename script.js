@@ -1828,14 +1828,14 @@ socket.on(
         String(message._id);
 
     // Real clientMessageId bhi preserve karo
-    if (message.clientMessageId) {
+   /* if (message.clientMessageId) {
 
         existingMessage.dataset.clientMessageId =
             message.clientMessageId;
 
     }
 
-}
+}*/
 else {
 
     showMessage(message);
@@ -2135,6 +2135,20 @@ div.appendChild(statusSpan);
 
         let latestMessageId =
             div.dataset.messageId;
+
+        // Optimistic message abhi server par save nahi hua
+        if (
+            !latestMessageId ||
+            latestMessageId === "null" ||
+            latestMessageId === "undefined"
+        ) {
+
+            alert(
+                "Message abhi send ho raha hai, thodi der baad delete karo."
+            );
+
+            return;
+        }
 
         deleteMessage(
             latestMessageId,
