@@ -1872,8 +1872,8 @@ socket.on(
 function showOptimisticMessage(message) {
 
     const optimisticMessage = {
-        _id: message.clientMessageId,
-        id: message.clientMessageId,
+        _id:null,
+        id:null,
         clientMessageId: message.clientMessageId,
 
         senderId: message.senderId,
@@ -1918,8 +1918,8 @@ function showMessage(message) {
     // ========================================================
 
     let messageId =
-    getMongoMessageId(message);
-
+    message._id ||
+    message.id;
     // ========================================================
     // MESSAGE DIV
     // ========================================================
@@ -2118,15 +2118,6 @@ div.appendChild(statusSpan);
     function (event) {
 
         event.stopPropagation();
-
-        if (!messageId) {
-
-            alert(
-                "Message abhi server par save ho raha hai. Thodi der baad try karo."
-            );
-
-            return;
-        }
 
         deleteMessage(
             messageId,
