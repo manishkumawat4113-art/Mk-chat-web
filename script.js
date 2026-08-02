@@ -1821,12 +1821,26 @@ socket.on(
 
 
     // Sirf tab show karo jab duplicate nahi hai
-    if (!existingMessage) {
+    if (existingMessage) {
 
-        showMessage(message);
+    // Optimistic message ko real MongoDB ID do
+    existingMessage.dataset.messageId =
+        String(message._id);
+
+    // Real clientMessageId bhi preserve karo
+    if (message.clientMessageId) {
+
+        existingMessage.dataset.clientMessageId =
+            message.clientMessageId;
 
     }
 
+}
+else {
+
+    showMessage(message);
+
+}
 
     // 💙 Read status ALWAYS process hoga
     if (
@@ -2119,8 +2133,11 @@ div.appendChild(statusSpan);
 
         event.stopPropagation();
 
+        let latestMessageId =
+            div.dataset.messageId;
+
         deleteMessage(
-            messageId,
+            latestMessageId,
             div
         );
 
