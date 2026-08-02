@@ -2848,16 +2848,58 @@ deleteMessageOption.addEventListener(
 
 
         // Message ID
-        let messageId =
-            selectedMessage._id ||
-            selectedMessage.id;
+let messageId =
+    selectedMessage._id ||
+    selectedMessage.id;
 
 
-        // DOM message find
-        let messageElement =
-            document.querySelector(
-                `[data-message-id="${messageId}"]`
-            );
+// Agar selectedMessage me ID nahi hai,
+// to DOM se actual MongoDB ID lo
+if (
+    !messageId ||
+    messageId === "null" ||
+    messageId === "undefined"
+) {
+
+    let messageElement =
+        document.querySelector(
+            `[data-client-message-id="${selectedMessage.clientMessageId}"]`
+        );
+
+    if (messageElement) {
+
+        messageId =
+            messageElement.dataset.messageId;
+
+    }
+
+}
+
+
+// ID abhi bhi nahi mili
+if (
+    !messageId ||
+    messageId === "null" ||
+    messageId === "undefined"
+) {
+
+    alert(
+        "Message ID nahi mili. Thodi der baad try karo."
+    );
+
+    messageMenu.style.display =
+        "none";
+
+    return;
+
+}
+
+
+// DOM message find
+let messageElement =
+    document.querySelector(
+        `[data-message-id="${messageId}"]`
+    );
 
 
         // Backend se delete
