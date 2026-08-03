@@ -845,16 +845,17 @@ profileScreenClose.addEventListener(
     "click",
     function () {
 
-       // profileScreen.style.display =
-          //  "none";
+        profileScreen.style.display =
+            "none";
+
+        chatScreen.style.display =
+            "block";
+
         homeScreen.style.display =
-           "block";
-        
-        
+            "none";
 
     }
 );
-
 // ============================================================
 // SEARCH USER
 // ============================================================
