@@ -848,11 +848,10 @@ profileScreenClose.addEventListener(
         profileScreen.style.display =
             "none";
 
-        chatScreen.style.display =
-            "block";
+        
 
         homeScreen.style.display =
-            "none";
+            "block";
 
     }
 );
