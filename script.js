@@ -845,8 +845,10 @@ profileScreenClose.addEventListener(
     "click",
     function () {
 
-        profileScreen.style.display =
-            "none";
+       // profileScreen.style.display =
+          //  "none";
+        homeScreen.style.display =
+           "block";
         
         
 
