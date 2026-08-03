@@ -1822,17 +1822,22 @@ socket.on(
     // Sirf tab show karo jab duplicate nahi hai
     if (existingMessage) {
 
-    // Optimistic message ko real MongoDB ID do
+    // Optimistic DOM message ko real MongoDB ID do
     existingMessage.dataset.messageId =
         String(message._id);
 
-    // Real clientMessageId bhi preserve karo
-   /* if (message.clientMessageId) {
 
-        existingMessage.dataset.clientMessageId =
-            message.clientMessageId;
+    // selectedMessage ko bhi real MongoDB ID do
+    if (
+        selectedMessage &&
+        selectedMessage.clientMessageId ===
+        message.clientMessageId
+    ) {
 
-    }*/
+        selectedMessage._id =
+            message._id;
+
+    }
 
 }
 else {
@@ -1840,7 +1845,6 @@ else {
     showMessage(message);
 
 }
-
     // 💙 Read status ALWAYS process hoga
     if (
     String(message.senderId) ===
@@ -2931,8 +2935,17 @@ replyMessageBtn.addEventListener("click",function () {
         }
         
   // Reply ke liye message save
-    selectedReply = selectedMessage;
+    selectedReply = {
+    ...selectedMessage,
 
+    _id:
+        selectedMessage._id ||
+        selectedMessage.id ||
+        selectedMessage.messageId ||
+        document.querySelector(
+            `[data-client-message-id="${selectedMessage.clientMessageId}"]`
+        )?.dataset.messageId
+};
 // Reply message show karo
 replyText.textContent =selectedMessage.text;
 
@@ -2979,7 +2992,12 @@ editMessageBtn.addEventListener(
 
         // Editing mode ON
         editingMessageId =
-            selectedMessage._id;
+    selectedMessage._id ||
+    selectedMessage.id ||
+    selectedMessage.messageId ||
+    document.querySelector(
+        `[data-client-message-id="${selectedMessage.clientMessageId}"]`
+    )?.dataset.messageId;
 
 
         // Menu close
