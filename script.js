@@ -715,7 +715,7 @@ let profileScreenClose =
 let editProfileBtn =
     document.querySelector("#editProfile");
 
-
+let profileOpenedFrom = "";
 
 
 
@@ -847,6 +847,28 @@ profileScreenClose.addEventListener(
 
         profileScreen.style.display =
             "none";
+
+
+        if (profileOpenedFrom === "chat") {
+
+            homeScreen.style.display =
+                "none";
+
+            chatScreen.style.display =
+                "block";
+
+        }
+
+
+        else if (profileOpenedFrom === "home") {
+
+            chatScreen.style.display =
+                "none";
+
+            homeScreen.style.display =
+                "block";
+
+        }
 
     }
 );
@@ -991,6 +1013,8 @@ searchInput.addEventListener(
                     div.addEventListener(
                         "click",
                         function () {
+
+                            profileOpenedFrom = "home";
 
 
                             // Selected user ID
@@ -3675,6 +3699,8 @@ div.addEventListener(
 
         chatUserName.onclick =
             function () {
+
+                profileOpenedFrom = "chat";
 
                 localStorage.setItem(
                     "selectedUserId",
