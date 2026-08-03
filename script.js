@@ -851,10 +851,10 @@ profileScreenClose.addEventListener(
 
         if (profileOpenedFrom === "chat") {
 
-            homeScreen.style.display =
-                "none";
 
             chatScreen.style.display =
+                "none";
+            homeScreen.style.display =
                 "block";
 
         }
