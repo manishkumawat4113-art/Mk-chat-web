@@ -1106,22 +1106,7 @@ searchInput.addEventListener(
 // ============================================================
 // EDIT PROFILE / MESSAGE BUTTON
 // ============================================================
-
-editProfileBtn.addEventListener(
-    "click",
-    function () {
-
-        let mode =
-            editProfileBtn.dataset.mode;
-
-
-        console.log(
-            "Button Mode:",
-            mode
-        );
-
-
-        // Current user
+ // Current user
         editProfileBtn.addEventListener(
     "click",
     function () {
