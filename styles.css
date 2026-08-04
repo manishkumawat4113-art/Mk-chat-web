@@ -467,6 +467,7 @@ button {
 .receivedMessage {
     align-self: flex-start;
     background: pink;
+    color:black;
 }
 
 /*MY MESSAGE RIGHT SIDE*/
@@ -474,6 +475,7 @@ button {
 .myMessage {
     align-self: flex-end;
     background: orange;
+    color:black;
 }
 
 /* DELETE BUTTON*/
@@ -1290,4 +1292,118 @@ body.dark-mode ::-webkit-scrollbar-track {
 body.dark-mode ::-webkit-scrollbar-thumb {
     background: #374045;
     border-radius: 10px;
+}
+/* =========================================================
+   PROFILE SCREEN - DARK MODE FIX
+   ========================================================= */
+
+body.dark-mode #profileScreen {
+    background: #111b21 !important;
+    color: #e9edef !important;
+}
+
+/* Profile header */
+body.dark-mode #profileScreen .profileHeader,
+body.dark-mode #profileScreen .profile-header,
+body.dark-mode #profileHeader {
+    background: #202c33 !important;
+    color: #e9edef !important;
+}
+
+/* Profile heading */
+body.dark-mode #profileScreen h1,
+body.dark-mode #profileScreen h2,
+body.dark-mode #profileScreen h3 {
+    color: #e9edef !important;
+}
+
+/* Name */
+body.dark-mode #profileName {
+    color: #e9edef !important;
+}
+
+/* Username */
+body.dark-mode #profileUsername {
+    color: #00a884 !important;
+}
+
+/* Email */
+body.dark-mode #profileEmail {
+    color: #b0b9bd !important;
+}
+
+/* Bio */
+body.dark-mode #profileBio {
+    color: #e9edef !important;
+}
+
+
+/* =========================================================
+   PROFILE ABOUT / LABELS
+   ========================================================= */
+
+body.dark-mode #profileScreen label,
+body.dark-mode #profileScreen strong,
+body.dark-mode #profileScreen span {
+    color: #e9edef !important;
+}
+
+
+/* =========================================================
+   PROFILE CLOSE BUTTON
+   ========================================================= */
+
+body.dark-mode #profileScreenClose {
+    background: #202c33 !important;
+    color: #e9edef !important;
+    border-color: #2a3942 !important;
+}
+
+
+/* =========================================================
+   EDIT PROFILE
+   ========================================================= */
+
+body.dark-mode #editProfileBox {
+    background: #111b21 !important;
+    color: #e9edef !important;
+}
+
+/* Edit Profile header */
+body.dark-mode .editProfileHeader {
+    background: #202c33 !important;
+    color: #e9edef !important;
+    border-color: #2a3942 !important;
+}
+
+body.dark-mode .editProfileHeader h2 {
+    color: #e9edef !important;
+}
+
+/* Back button */
+body.dark-mode #cancelEditProfile {
+    background: transparent !important;
+    color: #e9edef !important;
+}
+
+
+/* Edit labels */
+body.dark-mode .editProfileForm label {
+    color: #e9edef !important;
+}
+
+
+/* Edit inputs */
+body.dark-mode #editProfileBox input,
+body.dark-mode #editProfileBox textarea {
+    background: #202c33 !important;
+    color: #e9edef !important;
+    border-color: #2a3942 !important;
+}
+
+
+/* Save button */
+body.dark-mode #saveProfileBtn {
+    background: #00a884 !important;
+    color: #ffffff !important;
 }
