@@ -4361,7 +4361,5 @@ socket.on("user_status", function(data) {
             }
 
         }
-
     }
-
 });
