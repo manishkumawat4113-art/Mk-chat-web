@@ -165,7 +165,7 @@ button {
     display: none;
     position: fixed;
     inset: 0;
-    background: #ffffff;
+    background: pink;
     z-index: 1000;
     overflow-y: auto;
     font-family: Arial, sans-serif;
@@ -179,7 +179,7 @@ button {
     align-items: center;
     justify-content: space-between;
     padding: 0 15px;
-    background: #ffffff;
+    background: pink;
     border-bottom: 1px solid #eeeeee;
     position: sticky;
     top: 0;
@@ -912,3 +912,111 @@ button {
     font-size:15px;
     color:black;
 }
+/* ==================================================
+   EDIT PROFILE BOX
+================================================== */
+
+#editProfileBox {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+/* Header */
+.editProfileHeader {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 18px;
+    border-bottom: 1px solid #eeeeee;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+}
+
+.editProfileHeader h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+#cancelEditProfile {
+    border: none;
+    background: transparent;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* Form */
+.editProfileForm {
+    max-width: 500px;
+    margin: auto;
+    padding: 30px 22px;
+}
+
+.editProfileForm label {
+    display: block;
+    margin: 18px 0 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.editProfileForm input,
+.editProfileForm textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+}
+
+.editProfileForm textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+#saveProfileBtn {
+    width: 100%;
+    height: 46px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 12px;
+    background: #111111;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#saveProfileBtn:active {
+    transform: scale(0.98);
+}
+
+.unreadBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding: 0 6px;
+
+    background: blue;
+    color: black;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+
