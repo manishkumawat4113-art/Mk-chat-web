@@ -4234,5 +4234,58 @@ socket.on("user_status", function(data) {
             }
 
         }
-    }
+    }function scrollChatToBottom() {
+
+    const messages =
+        document.querySelector("#messages");
+
+    if (!messages) return;
+
+    requestAnimationFrame(() => {
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+        setTimeout(() => {
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
+        }, 100);
+
+    });
+
+}
+
+
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        function () {
+
+            setTimeout(() => {
+
+                const chatInput =
+                    document.querySelector(
+                        "#messageInput"
+                    );
+
+                if (
+                    document.activeElement ===
+                    chatInput
+                ) {
+
+                    scrollChatToBottom();
+
+                }
+
+            }, 100);
+
+        }
+    );
+
+}
 });
+
+
