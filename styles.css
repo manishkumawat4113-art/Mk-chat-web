@@ -161,39 +161,251 @@ button {
     cursor: pointer;
 }
 /* PROFILE SCREEN*/
-
 #profileScreen {
     display: none;
     position: fixed;
     inset: 0;
-    padding: 30px;
-    background: green;
+    background: #ffffff;
     z-index: 1000;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+}
+/* ============================================================
+   HEADER
+============================================================ */
+.profileHeader {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    position: sticky;
+    top: 0;
+    z-index: 5;
 }
 
-#profileScreen h2 {
-    margin-bottom: 15px;
+.profileHeader h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222222;
 }
 
-#profileScreen p {
-    margin-bottom: 10px;
-}
-
-#editProfile {
-    padding: 12px 20px;
-    margin-top: 20px;
-    background: blue;
-    color: white;
-}
-
+/* ============================================================
+   BACK BUTTON
+============================================================ */
 #profileScreenClose {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    background: white;
+    position: static;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #222222;
+    font-size: 30px;
+    line-height: 42px;
+    cursor: pointer;
 }
 
+
+/* ============================================================
+   MORE BUTTON
+============================================================ */
+.profileMoreBtn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: transparent;
+    font-size: 27px;
+    color: #222222;
+}
+
+/* ============================================================
+   PROFILE CONTENT
+============================================================ */
+.profileContent {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 30px 22px 60px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* ============================================================
+   PROFILE PHOTO
+============================================================ */
+.profilePhoto {
+    width: 115px;
+    height: 115px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        #eeeeee,
+        #d8d8d8
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.15);
+}
+
+.profilePhoto span {
+    font-size: 55px;
+}
+
+/* ============================================================
+   NAME
+============================================================ */
+#profileName {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+    color: #111111;
+    word-break: break-word;
+}
+
+/* ============================================================
+   USERNAME
+============================================================ */
+.profileUsername {
+    margin-top: 5px;
+    font-size: 15px;
+    color: #777777;
+}
+
+/* ============================================================
+   BIO
+============================================================ */
+#profileBio {
+    max-width: 340px;
+    margin: 13px auto 22px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #555555;
+    word-break: break-word;
+}
+
+/* ============================================================
+   MESSAGE / EDIT PROFILE BUTTON
+============================================================ */
+#editProfile {
+    width: 100%;
+    max-width: 330px;
+    height: 46px;
+    padding: 0;
+    margin-top: 5px;
+    border: none;
+    border-radius: 12px;
+    background: #111111;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#editProfile:active {
+    transform: scale(0.97);
+}
+
+/* ============================================================
+   DIVIDER
+============================================================ */
+.profileDivider {
+    width: 100%;
+    height: 1px;
+    background: #eeeeee;
+    margin: 32px 0 25px;
+}
+
+/* ============================================================
+   ABOUT
+============================================================ */
+.profileAbout {
+    text-align: left;
+}
+
+.profileAbout h3 {
+    margin: 0 0 15px;
+    font-size: 19px;
+    font-weight: 700;
+    color: #222222;
+}
+
+/* ============================================================
+   INFORMATION ITEM
+============================================================ */
+.profileInfoItem {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 5px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+/* ============================================================
+   ICON
+============================================================ */
+.profileInfoIcon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+/* ============================================================
+   TEXT
+============================================================ */
+.profileInfoText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.profileInfoText span {
+    font-size: 12px;
+    color: #888888;
+}
+
+.profileInfoText strong {
+    font-size: 15px;
+    font-weight: 500;
+    color: #222222;
+    word-break: break-word;
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+@media (max-width: 600px) {
+    .profileContent {
+        padding-top: 25px;
+    }
+
+    .profilePhoto {
+        width: 105px;
+        height: 105px;
+    }
+
+    .profilePhoto span {
+        font-size: 50px;
+    }
+    
+ #profileName {
+        font-size: 23px;
+    }
+}
 /* CHAT SCREEN*/
 
 #chatScreen {
