@@ -793,23 +793,30 @@ profile.addEventListener(
 
 
             document.querySelector(
-                "#profileName"
-            ).textContent =
-                "👤 " +
-                user.username;
+    "#profileName"
+).textContent =
+    "👤 " +
+    user.name;
 
 
-            document.querySelector(
-                "#profileEmail"
-            ).textContent =
-                user.email;
+document.querySelector(
+    "#profileUsername"
+).textContent =
+    "@" +
+    user.username;
 
 
-            document.querySelector(
-                "#profileBio"
-            ).textContent = user.bio||
-                "Hello! I'm using MK Chat";
+document.querySelector(
+    "#profileEmail"
+).textContent =
+    user.email;
 
+
+document.querySelector(
+    "#profileBio"
+).textContent =
+    user.about ||
+    "Hello! I'm using MK Chat";
           
             // Current user profile
             editProfileBtn.textContent =
@@ -1115,18 +1122,328 @@ editProfileBtn.addEventListener(
 
 
         // Current user
+        editProfileBtn.addEventListener(
+    "click",
+    function () {
+
+        let mode =
+            editProfileBtn.dataset.mode;
+
+
+        console.log(
+            "Button Mode:",
+            mode
+        );
+
+
+        // ====================================================
+        // CURRENT USER → EDIT PROFILE
+        // ====================================================
+
         if (
             mode ===
             "edit"
         ) {
 
-            alert(
-                "Edit Profile feature baad me banayenge"
+            let currentName =
+    document.querySelector(
+        "#profileName"
+    ).textContent
+    .replace("👤", "")
+    .trim();
+
+
+let currentUsername =
+    document.querySelector(
+        "#profileUsername"
+    ).textContent
+    .replace("@", "")
+    .trim();
+
+
+let currentBio =
+    document.querySelector(
+        "#profileBio"
+    ).textContent
+    .trim();
+
+            let editBox =
+                document.createElement(
+                    "div"
+                );
+
+
+            editBox.id =
+                "editProfileBox";
+
+
+            editBox.innerHTML = `
+
+                <div class="editProfileHeader">
+
+                    <button id="cancelEditProfile">
+                        ←
+                    </button>
+
+                    <h2>Edit Profile</h2>
+
+                </div>
+
+
+                <div class="editProfileForm">
+
+                    <label>Name</label>
+
+                    <input
+                        id="editName"
+                        type="text"
+                        value="${currentName}"
+                    >
+
+
+                    <label>Username</label>
+
+                    <input
+    id="editUsername"
+    type="text"
+    value="${currentUsername}"
+    placeholder="Username"
+>
+
+
+                    <label>Bio</label>
+
+                    <textarea
+                        id="editBio"
+                    >${currentBio}</textarea>
+
+
+                    <button
+                        id="saveProfileBtn"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            `;
+
+
+            profileScreen.appendChild(
+                editBox
             );
+
+
+            // ====================================================
+            // CLOSE EDIT PROFILE
+            // ====================================================
+
+            document.querySelector(
+                "#cancelEditProfile"
+            ).onclick =
+                function () {
+
+                    editBox.remove();
+
+                };
+
+
+            // ====================================================
+            // SAVE PROFILE
+            // ====================================================
+
+            document.querySelector(
+                "#saveProfileBtn"
+            ).onclick =
+                async function () {
+
+                    let newName =
+                        document.querySelector(
+                            "#editName"
+                        ).value.trim();
+
+
+                    let newUsername =
+                        document.querySelector(
+                            "#editUsername"
+                        ).value.trim();
+
+
+                    let newBio =
+                        document.querySelector(
+                            "#editBio"
+                        ).value.trim();
+
+
+                    // Name check
+
+                    if (!newName) {
+
+                        alert(
+                            "Name required hai"
+                        );
+
+                        return;
+
+                    }
+
+
+                    // Username check
+
+                    if (!newUsername) {
+
+                        alert(
+                            "Username required hai"
+                        );
+
+                        return;
+
+                    }
+
+
+                    // ====================================================
+                    // TOKEN
+                    // ====================================================
+
+                    let token =
+                        localStorage.getItem(
+                            "token"
+                        );
+
+
+                    if (!token) {
+
+                        alert(
+                            "Login token nahi mila"
+                        );
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        // ====================================================
+                        // UPDATE PROFILE IN MONGODB
+                        // ====================================================
+
+                        let response =
+                            await fetch(
+                                `${BACKEND_URL}/api/auth/profile`,
+                                {
+
+                                    method:
+                                        "PUT",
+
+                                    headers: {
+
+                                        "Content-Type":
+                                            "application/json",
+
+                                        "Authorization":
+                                            "Bearer " +
+                                            token
+
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+
+                                            name:
+                                                newName,
+
+                                            username:
+                                                newUsername,
+
+                                            about:
+                                                newBio
+
+                                        })
+
+                                }
+                            );
+
+
+                        let result =
+                            await response.json();
+
+
+                        // ====================================================
+                        // BACKEND ERROR
+                        // ====================================================
+
+                        if (!response.ok) {
+
+                            alert(
+                                result.error ||
+                                "Profile update nahi hui"
+                            );
+
+                            return;
+
+                        }
+
+
+                        // ====================================================
+                        // UPDATE PROFILE SCREEN
+                        // ====================================================
+
+                        document.querySelector(
+    "#profileName"
+).textContent =
+    "👤 " +
+    result.user.name;
+
+
+document.querySelector(
+    "#profileUsername"
+).textContent =
+    "@" +
+    result.user.username;
+
+
+document.querySelector(
+    "#profileBio"
+).textContent =
+    result.user.about ||
+    "Hello! I'm using MK Chat";
+
+                        // ====================================================
+                        // CLOSE EDIT SCREEN
+                        // ====================================================
+
+                        editBox.remove();
+
+
+                        alert(
+                            "Profile successfully updated ✅"
+                        );
+
+                    }
+
+
+                    catch (error) {
+
+                        console.error(
+                            "Profile Update Error:",
+                            error
+                        );
+
+
+                        alert(
+                            "Profile update karne me error aaya"
+                        );
+
+                    }
+
+                };
+
 
             return;
 
         }
+
 
 
         // Selected user
