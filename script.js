@@ -4288,4 +4288,79 @@ if (window.visualViewport) {
 }
 });
 
+if (window.visualViewport) {
+
+    const fixChromeKeyboard = () => {
+
+        const chatScreen =
+            document.querySelector("#chatScreen");
+
+        const chatInput =
+            document.querySelector("#chatInput");
+
+        const messages =
+            document.querySelector("#messages");
+
+        if (
+            !chatScreen ||
+            !chatInput ||
+            !messages
+        ) {
+            return;
+        }
+
+        if (
+            chatScreen.style.display === "none"
+        ) {
+            return;
+        }
+
+        const viewport =
+            window.visualViewport;
+
+        const keyboardHeight =
+            window.innerHeight -
+            viewport.height;
+
+        if (keyboardHeight > 100) {
+
+            // Keyboard open
+
+            chatInput.style.bottom =
+                keyboardHeight + "px";
+
+            messages.style.paddingBottom =
+                (
+                    chatInput.offsetHeight +
+                    20
+                ) + "px";
+
+        } else {
+
+            // Keyboard closed
+
+            chatInput.style.bottom =
+                "0px";
+
+            messages.style.paddingBottom =
+                "15px";
+
+        }
+
+    };
+
+
+    window.visualViewport.addEventListener(
+        "resize",
+        fixChromeKeyboard
+    );
+
+
+    window.visualViewport.addEventListener(
+        "scroll",
+        fixChromeKeyboard
+    );
+
+}
+
 
