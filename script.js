@@ -3957,7 +3957,13 @@ div.innerHTML=
 `
 <div>
 
-<h3>${chat.username}</h3>
+<h3>${chat.username}
+
+    ${
+    chat.unreadCount > 0
+    ? `<span class="unreadBadge">${chat.unreadCount}</span>`
+    : ""
+}</h3>
 
 <p class="lastMessage">
 
