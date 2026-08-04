@@ -791,6 +791,22 @@ document.querySelector(
 ).textContent =
     user.about ||
     "Hello! I'm using MK Chat";
+
+            const joinedDate =
+    new Date(user.createdAt);
+
+document.querySelector(
+    "#profileJoined"
+).textContent =
+    "Joined " +
+    joinedDate.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
           
             // Current user profile
             editProfileBtn.textContent =
@@ -1034,6 +1050,21 @@ document.querySelector(
 ).textContent =
     user.about ||
     "Hello! I'm using MK Chat";
+
+                            const joinedDate =
+    new Date(user.createdAt);
+
+document.querySelector(
+    "#profileJoined"
+).textContent =
+    joinedDate.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
                             // Message mode
                             editProfileBtn.textContent =
                                 "Message";
@@ -4043,6 +4074,21 @@ document.querySelector(
 ).textContent =
     chat.about ||
     "Hello! I'm using MK Chat";
+
+           const joinedDate =
+    new Date(chat.createdAt);
+
+document.querySelector(
+    "#profileJoined"
+).textContent =
+    joinedDate.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );     
                 editProfileBtn.textContent =
                     "Message";
 
