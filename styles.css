@@ -1407,3 +1407,35 @@ body.dark-mode #saveProfileBtn {
     background: #00a884 !important;
     color: #ffffff !important;
 }
+
+/* =====================================================
+   SEARCH RESULTS - DARK MODE
+   ===================================================== */
+
+body.dark-mode #searchResult {
+    background: #111b21 !important;
+}
+
+body.dark-mode #searchResult .user {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 14px 16px;
+
+    margin-bottom: 6px;
+
+    background: #202c33 !important;
+    color: #e9edef !important;
+
+    border-bottom: 1px solid #2a3942 !important;
+
+    border-radius: 6px;
+}
+
+body.dark-mode #searchResult .user:hover {
+    background: #2a3942 !important;
+}
+
