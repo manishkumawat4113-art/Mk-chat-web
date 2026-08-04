@@ -41,15 +41,72 @@
          </div>
          </div> 
          
- <div id="profileScreen">
-          <h2 id="profileName"></h2>
-          <button id="profileScreenClose">←</button>
-          <p id="profileEmail"></p>
-          <p id="profileBio"></p>
-          
-          <button id="editProfile">Edit Profile</button>
-    
-  </div>     
+ <!-- ============================================================
+     MK CHAT PROFILE
+============================================================ -->
+
+<div id="profileScreen">
+
+    <!-- Header -->
+  <div class="profileHeader">
+     <button id="profileScreenClose" class="profileBackBtn">←</button>
+     <h2>Profile</h2>
+     <button class="profileMoreBtn">⋮</button>
+  </div>
+
+   <!-- Profile Body -->
+    <div class="profileContent">
+
+  <!-- Profile Photo -->
+    <div class="profilePhoto">
+       <span>👤</span>
+    </div>
+
+   <!-- Name -->
+    <h1 id="profileName">Manish</h1>
+
+   <!-- Username -->
+  <div id="profileUsername" class="profileUsername">
+            @username</div>
+  <p id="profileUsername"></p>
+
+   <!-- Bio -->
+    <p id="profileBio" class="profileBio">
+        Hello! I'm using MK Chat</p>
+
+   <!-- Existing button ID -->
+    <button id="editProfile" class="profileActionBtn">
+            Edit Profile</button>
+
+  <!-- Divider -->
+     <div class="profileDivider"></div>
+
+ <!-- About -->
+    <div class="profileAbout">
+      <h3>About</h3>
+ 
+ <!-- Email -->
+    <div class="profileInfoItem">
+    <div class="profileInfoIcon">✉️</div>
+
+    <div class="profileInfoText">
+      <span>Email</span>
+      <strong id="profileEmail">
+          example@gmail.com</strong>
+      </div>
+    </div>
+
+  <!-- Joined -->
+    <div class="profileInfoItem">
+    <div class="profileInfoIcon">📅</div>
+    <div class="profileInfoText">
+    <span>Joined</span>
+    <strong id="profileJoined">July 2026</strong>
+             </div>
+          </div>
+        </div>
+      </div>
+</div>     
           
    <!-- <div id="notificationScreen">
           <h2>Notifications</h2>
