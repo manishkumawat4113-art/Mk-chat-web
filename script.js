@@ -4035,26 +4035,31 @@ div.addEventListener(
                 
 
                 document.querySelector(
-                    "#profileName"
-                ).textContent =
-                    "👤 " +
-                    chat.username;
+    "#profileName"
+).textContent =
+    "👤 " +
+    chat.name;
 
 
-                document.querySelector(
-                    "#profileEmail"
-                ).textContent =
-                    chat.email ||
-                    "";
+document.querySelector(
+    "#profileUsername"
+).textContent =
+    "@" +
+    chat.username;
 
 
-                document.querySelector(
-                    "#profileBio"
-                ).textContent =
-                    chat.bio ||
-                    "Hello! I'm using MK Chat";
+document.querySelector(
+    "#profileEmail"
+).textContent =
+    chat.email ||
+    "";
 
 
+document.querySelector(
+    "#profileBio"
+).textContent =
+    chat.about ||
+    "Hello! I'm using MK Chat";
                 editProfileBtn.textContent =
                     "Message";
 
