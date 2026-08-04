@@ -1627,8 +1627,11 @@ function markMessagesAsRead() {
         senderId: selectedUserId
     });
 
-}
+    setTimeout(function () {
+        loadChats();
+    }, 300);
 
+}
 // ============================================================
 // OFFLINE MESSAGE QUEUE
 // ============================================================
