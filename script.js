@@ -71,18 +71,6 @@ if (
             `[data-client-message-id="${data.clientMessageId}"]`
         );
 }
-
-   /* if (!messageDiv) {
-
-        console.log(
-            "Message div nahi mila:",
-            data.messageId
-        );
-
-        return;
-
-    }*/
-
     if (messageDiv) {
         
 
@@ -156,21 +144,7 @@ socket.on("messages_read", function (data) {
                 "#2196F3";
 
      });
-});/*
-function markMessagesAsRead() {
-
-    const selectedUserId =
-        localStorage.getItem("selectedUserId");
-
-    if (!selectedUserId) return;
-
-    if (!socket.connected) return;
-
-    socket.emit("read_messages", {
-        senderId: selectedUserId
-    });
-
-}*/
+});
 
 function getMongoMessageId(message) {
     if (
@@ -4115,131 +4089,6 @@ div
 
 }
 
-/*async function loadUserStatus(){
-
-let token=localStorage.getItem("token");
-
-let userId=localStorage.getItem("selectedUserId");
-
-let response=await fetch(
-
-`${BACKEND_URL}/api/users/${userId}/status`,
-
-{
-
-headers:{
-
-Authorization:"Bearer "+token
-
-}
-
-}
-
-);
-
-let result=await response.json();
-
-if(result.isOnline){
-
-document.querySelector("#chatStatus").textContent="Online";
-
-}else{
-
-document.querySelector("#chatStatus").textContent=
-
-"Last Seen "+
-new Date(result.lastSeen).toLocaleTimeString();
-
-}
-
-}
-
-socket.on("user_status", function(data){
-
-let selectedUserId=
-localStorage.getItem("selectedUserId");
-
-if(data.userId!==selectedUserId){
-
-return;
-
-}
-
-if(data.isOnline){
-
-document.querySelector("#chatStatus").textContent="Online";
-
-}else{
-
-document.querySelector("#chatStatus").textContent=
-
-"Last Seen "+
-new Date(data.lastSeen).toLocaleTimeString();
-
-}
-
-});
-
-let typingTimeout;
-
-messageInput.addEventListener("input",function(){
-
-let currentUser=
-JSON.parse(localStorage.getItem("currentUser"));
-
-let selectedUserId=
-localStorage.getItem("selectedUserId");
-
-socket.emit("typing",{
-
-senderId:currentUser.id,
-
-receiverId:selectedUserId
-
-});
-
-clearTimeout(typingTimeout);
-
-typingTimeout=setTimeout(function(){
-
-socket.emit("stop_typing",{
-
-senderId:currentUser.id,
-
-receiverId:selectedUserId
-
-});
-
-},1000);
-
-});
-
-socket.on("typing",function(data){
-
-let selectedUserId=
-localStorage.getItem("selectedUserId");
-
-if(data.senderId===selectedUserId){
-
-document.querySelector("#chatStatus").textContent="Typing...";
-
-}
-
-});
-
-socket.on("stop_typing",function(data){
-
-let selectedUserId=
-localStorage.getItem("selectedUserId");
-
-if(data.senderId===selectedUserId){
-
-loadUserStatus();
-
-}
-
-});*/
-
 async function loadUserStatus(){
 
 let selectedUserId =
@@ -4306,33 +4155,7 @@ status.textContent =
 }
 
 }
-/*socket.on("user_status",function(data){
 
-let selectedUserId =
-localStorage.getItem("selectedUserId");
-
-
-if(String(data.userId) === String(selectedUserId)){
-
-
-if(data.isOnline){
-
-document.querySelector("#chatStatus")
-.textContent="Online";
-
-}
-
-else{
-
-document.querySelector("#chatStatus")
-.textContent=
-"Last seen just now";
-
-}
-
-}
-
-});*/
 socket.on("user_status", function(data) {
 
     let selectedUserId =
