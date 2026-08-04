@@ -1032,29 +1032,34 @@ searchInput.addEventListener(
 
                     
 
+// Profile show
 
-                            // Profile show
-                            document.querySelector(
-                                "#profileName"
-                            ).textContent =
-                                "👤 " +
-                                user.username;
-                             
-
-                            document.querySelector(
-                                "#profileEmail"
-                            ).textContent =
-                                user.email ||
-                                "";
+document.querySelector(
+    "#profileName"
+).textContent =
+    "👤 " +
+    user.name;
 
 
-                            document.querySelector(
-                                "#profileBio"
-                            ).textContent =
-                                user.bio ||
-                                "Hello! I'm using MK Chat";
+document.querySelector(
+    "#profileUsername"
+).textContent =
+    "@" +
+    user.username;
 
 
+document.querySelector(
+    "#profileEmail"
+).textContent =
+    user.email ||
+    "";
+
+
+document.querySelector(
+    "#profileBio"
+).textContent =
+    user.about ||
+    "Hello! I'm using MK Chat";
                             // Message mode
                             editProfileBtn.textContent =
                                 "Message";
