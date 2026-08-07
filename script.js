@@ -1504,144 +1504,351 @@ window.MKOfflineSession = {
 
 // ============================================================
 // SOCKET.IO CONNECTION
+// PART 2D - OFFLINE AWARE SOCKET
 // ============================================================
-const socket =
-    io(BACKEND_URL, {
-        transports: ["polling", "websocket"]
-    });
-// ============================================================
-// SOCKET CONNECTED
-// ============================================================
-socket.on("connect", function () {
 
-    console.log(
-        "✅ Socket connected:",
-        socket.id
-    );
-
-    joinUserRoom();
-        retryPendingMessages();
-});
-
-// ============================================================
-// SOCKET ERROR
-// ============================================================
-socket.on("connect_error", function (error) {
-
-    console.error(
-        "❌ Socket connection error:",
-        error
-    );
-
-});
-// ============================================================
-// USER STATUS
-// ============================================================
-socket.on("user_status", function (data) {
- console.log("USER STATUS:",data);
-   });
+let socket = null;
 
 
 // ============================================================
-// MESSAGE DELIVERED
+// CREATE SOCKET
 // ============================================================
 
-socket.on("message_delivered", function (data) {
+function mkCreateSocket() {
 
-    console.log(
-        "✅ Delivered:",
-        data
-    );
-
-
-    let messageDiv =
-    document.querySelector(
-        `[data-message-id="${data.messageId}"]`
-    );
-
-if (
-    !messageDiv &&
-    data.clientMessageId
-) {
-    messageDiv =
-        document.querySelector(
-            `[data-client-message-id="${data.clientMessageId}"]`
-        );
-}
-    if (messageDiv) {
-        
-
-    const status =
-        messageDiv.querySelector(
-            ".messageStatus"
-        );
+    // Already connected/created
+    if (socket) {
+        return;
+    }
 
 
-if (status) {
+    // --------------------------------------------------------
+    // Do not create Socket.IO connection while offline
+    // --------------------------------------------------------
 
-    // Agar already READ hai to blue hi rehne do
     if (
-        status.textContent === "✓✓" &&
-        status.style.color
+        window.MK_OFFLINE_SESSION_ACTIVE === true ||
+        !mkIsRealInternetAvailable()
     ) {
-     return;
-    }
 
-    status.textContent = "✓✓";
-    status.style.color = "";
-}
-}
-loadChats();
-        
-});
-// ============================================================
-// MESSAGE SAVED
-// ============================================================
-
-socket.on("message_saved", function (data) {
-
-    console.log(
-        "💾 Message saved:",
-        data.clientMessageId
-    );
-
-    if (data.clientMessageId) {
-
-        removePendingMessage(
-            data.clientMessageId
+        console.log(
+            "📴 Socket skipped - offline mode"
         );
 
+        return;
     }
 
-});
-
-
-// ============================================================
-// MESSAGE READ
-// ============================================================
-
-socket.on("messages_read", function (data) {
 
     console.log(
-        "💙 Read:",
-        data
+        "🌐 Creating Socket.IO connection..."
     );
 
 
-    document
-        .querySelectorAll(
-            ".myMessage .messageStatus"
-        )
-        .forEach(function (status) {
+    socket =
+        io(
+            BACKEND_URL,
+            {
+                transports: [
+                    "polling",
+                    "websocket"
+                ],
 
-            status.textContent =
-                "✓✓";
+                reconnection: true,
 
-            status.style.color =
-                "#2196F3";
+                reconnectionAttempts: Infinity,
 
-     });
-});
+                reconnectionDelay: 2000,
+
+                autoConnect: true
+
+            }
+        );
+
+
+    // ========================================================
+    // SOCKET CONNECTED
+    // ========================================================
+
+    socket.on(
+        "connect",
+        function () {
+
+            console.log(
+                "✅ Socket connected:",
+                socket.id
+            );
+
+
+            window.MK_OFFLINE_SESSION_ACTIVE =
+                false;
+
+
+            joinUserRoom();
+
+
+            retryPendingMessages();
+
+        }
+    );
+
+
+    // ========================================================
+    // SOCKET ERROR
+    // ========================================================
+
+    socket.on(
+        "connect_error",
+        function (error) {
+
+            console.error(
+                "❌ Socket connection error:",
+                error
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // USER STATUS
+    // ========================================================
+
+    socket.on(
+        "user_status",
+        function (data) {
+
+            console.log(
+                "USER STATUS:",
+                data
+            );
+
+        }
+    );
+
+
+    // ========================================================
+    // MESSAGE DELIVERED
+    // ========================================================
+
+    socket.on(
+        "message_delivered",
+        function (data) {
+
+            console.log(
+                "✅ Delivered:",
+                data
+            );
+
+
+            let messageDiv =
+                document.querySelector(
+                    `[data-message-id="${data.messageId}"]`
+                );
+
+
+            if (
+                !messageDiv &&
+                data.clientMessageId
+            ) {
+
+                messageDiv =
+                    document.querySelector(
+                        `[data-client-message-id="${data.clientMessageId}"]`
+                    );
+
+            }
+
+
+            if (messageDiv) {
+
+                const status =
+                    messageDiv.querySelector(
+                        ".messageStatus"
+                    );
+
+
+                if (status) {
+
+                    // Already READ
+                    if (
+                        status.textContent === "✓✓" &&
+                        status.style.color
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    status.textContent =
+                        "✓✓";
+
+                    status.style.color =
+                        "";
+
+                }
+
+            }
+
+
+            loadChats();
+
+        }
+    );
+
+
+    // ========================================================
+    // MESSAGE SAVED
+    // ========================================================
+
+    socket.on(
+        "message_saved",
+        function (data) {
+
+            console.log(
+                "💾 Message saved:",
+                data.clientMessageId
+            );
+
+
+            if (data.clientMessageId) {
+
+                removePendingMessage(
+                    data.clientMessageId
+                );
+
+            }
+
+        }
+    );
+
+
+    // ========================================================
+    // MESSAGE READ
+    // ========================================================
+
+    socket.on(
+        "messages_read",
+        function (data) {
+
+            console.log(
+                "💙 Read:",
+                data
+            );
+
+
+            document
+                .querySelectorAll(
+                    ".myMessage .messageStatus"
+                )
+                .forEach(
+                    function (status) {
+
+                        status.textContent =
+                            "✓✓";
+
+                        status.style.color =
+                            "#2196F3";
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// REAL INTERNET FLAG
+// ============================================================
+
+let mkRealInternetAvailable =
+    false;
+
+
+// ============================================================
+// REAL INTERNET CHECK HELPER
+// ============================================================
+
+function mkIsRealInternetAvailable() {
+
+    return (
+        mkRealInternetAvailable === true
+    );
+
+}
+
+
+// ============================================================
+// WHEN INTERNET COMES BACK
+// ============================================================
+
+window.addEventListener(
+    "mk:online",
+    function () {
+
+        console.log(
+            "🌐 Internet detected - starting Socket.IO"
+        );
+
+
+        mkRealInternetAvailable =
+            true;
+
+
+        window.MK_OFFLINE_SESSION_ACTIVE =
+            false;
+
+
+        mkCreateSocket();
+
+    }
+);
+
+
+// ============================================================
+// WHEN INTERNET GOES OFFLINE
+// ============================================================
+
+window.addEventListener(
+    "mk:offline",
+    function () {
+
+        console.log(
+            "📴 Internet lost - stopping Socket.IO"
+        );
+
+
+        mkRealInternetAvailable =
+            false;
+
+
+        if (socket) {
+
+            try {
+
+                socket.disconnect();
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "⚠️ Socket disconnect error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        socket =
+            null;
+
+    }
+);
 
 function getMongoMessageId(message) {
     if (
@@ -6128,21 +6335,25 @@ async function mkCheckRealInternet() {
 
 
         console.log(
-            "🌐 Backend reachable:",
-            response.status
-        );
+    "🌐 Backend reachable:",
+    response.status
+);
 
+mkRealInternetAvailable =
+    true;
 
-        return true;
-
+return true;
+        
     } catch (error) {
 
         console.log(
-            "📴 Backend unreachable - offline mode"
-        );
+    "📴 Backend unreachable - offline mode"
+);
 
-        return false;
+mkRealInternetAvailable =
+    false;
 
+return false;
     }
 
 }
