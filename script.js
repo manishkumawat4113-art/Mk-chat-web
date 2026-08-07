@@ -1564,7 +1564,11 @@ function mkCreateSocket() {
             }
         );
 
+// ========================================================
+// REGISTER REALTIME MESSAGE LISTENER
+// ========================================================
 
+mkRegisterReceiveMessage();
     // ========================================================
     // SOCKET CONNECTED
     // ========================================================
@@ -3996,141 +4000,164 @@ async function editMessage(
 // ============================================================
 // RECEIVE REALTIME MESSAGE
 // ============================================================
+// ============================================================
+// RECEIVE REALTIME MESSAGE
+// PART 2D - SOCKET SAFE
+// ============================================================
 
-socket.on(
-    "receive_message",
-    function (message) {
+function mkRegisterReceiveMessage() {
+
+    if (!socket) {
 
         console.log(
-            "📩 New Message:",
-            message
+            "📴 Receive message listener skipped - socket offline"
         );
 
+        return;
+    }
 
-        let currentUser =
-            JSON.parse(
+
+    socket.on(
+        "receive_message",
+        function (message) {
+
+            console.log(
+                "📩 New Message:",
+                message
+            );
+
+
+            let currentUser =
+                JSON.parse(
+                    localStorage.getItem(
+                        "currentUser"
+                    )
+                );
+
+
+            let selectedUserId =
                 localStorage.getItem(
-                    "currentUser"
+                    "selectedUserId"
+                );
+
+
+            if (!currentUser) {
+                return;
+            }
+
+
+            // ====================================================
+            // CURRENT CHAT CHECK
+            // ====================================================
+
+            let isCurrentChat =
+
+                (
+                    String(message.senderId) ===
+                    String(currentUser.id)
+                    &&
+                    String(message.receiverId) ===
+                    String(selectedUserId)
                 )
-            );
+
+                ||
+
+                (
+                    String(message.senderId) ===
+                    String(selectedUserId)
+                    &&
+                    String(message.receiverId) ===
+                    String(currentUser.id)
+                );
 
 
-        let selectedUserId =
-            localStorage.getItem(
-                "selectedUserId"
-            );
+            // ====================================================
+            // SHOW MESSAGE ONLY ONCE
+            // ====================================================
+
+            if (isCurrentChat) {
+
+                // Optimistic message already screen par hai
+                const existingMessage =
+                    message.clientMessageId &&
+                    document.querySelector(
+                        `[data-client-message-id="${message.clientMessageId}"]`
+                    );
 
 
-        if (!currentUser) {
-            return;
-        }
+                // Sirf tab show karo jab duplicate nahi hai
+                if (existingMessage) {
+
+                    // Optimistic DOM message ko real MongoDB ID do
+                    existingMessage.dataset.messageId =
+                        String(message._id);
 
 
-        // ====================================================
-        // CURRENT CHAT CHECK
-        // ====================================================
+                    // selectedMessage ko bhi real MongoDB ID do
+                    if (
+                        selectedMessage &&
+                        selectedMessage.clientMessageId ===
+                        message.clientMessageId
+                    ) {
 
-        let isCurrentChat =
+                        selectedMessage._id =
+                            message._id;
 
-            (
-                String(message.senderId) ===
-                String(currentUser.id)
-                &&
-                String(message.receiverId) ===
-                String(selectedUserId)
-            )
+                    }
 
-            ||
-
-            (
-                String(message.senderId) ===
-                String(selectedUserId)
-                &&
-                String(message.receiverId) ===
-                String(currentUser.id)
-            );
-
-
-        // ====================================================
-        // SHOW MESSAGE ONLY ONCE
-        // ====================================================
-
-        if (isCurrentChat) {
-
-    // Optimistic message already screen par hai
-    const existingMessage =
-        message.clientMessageId &&
-        document.querySelector(
-            `[data-client-message-id="${message.clientMessageId}"]`
-        );
-
-
-    // Sirf tab show karo jab duplicate nahi hai
-    if (existingMessage) {
-
-    // Optimistic DOM message ko real MongoDB ID do
-    existingMessage.dataset.messageId =
-        String(message._id);
-
-
-    // selectedMessage ko bhi real MongoDB ID do
-    if (
-        selectedMessage &&
-        selectedMessage.clientMessageId ===
-        message.clientMessageId
-    ) {
-
-        selectedMessage._id =
-            message._id;
-
-    }
-
-}
-else {
-
-    showMessage(message);
-
-}
-    // 💙 Read status ALWAYS process hoga
-    if (
-    String(message.senderId) ===
-    String(selectedUserId) &&
-    chatScreen.style.display !== "none"
-) {
-
-    markMessagesAsRead();
-
-    }
-
-        }
-        // ====================================================
-        // DELIVERY CONFIRMATION
-        // Only receiver sends this
-        // ====================================================
-
-        if (
-            String(message.receiverId) ===
-            String(currentUser.id)
-        ) {
-
-            socket.emit(
-                "message_received",
-                {
-                    messageId: message._id
                 }
-            );
+
+                else {
+
+                    showMessage(message);
+
+                }
+
+
+                // 💙 Read status ALWAYS process hoga
+                if (
+                    String(message.senderId) ===
+                    String(selectedUserId) &&
+                    chatScreen.style.display !== "none"
+                ) {
+
+                    markMessagesAsRead();
+
+                }
+
+            }
+
+
+            // ====================================================
+            // DELIVERY CONFIRMATION
+            // Only receiver sends this
+            // ====================================================
+
+            if (
+                String(message.receiverId) ===
+                String(currentUser.id)
+            ) {
+
+                socket.emit(
+                    "message_received",
+                    {
+                        messageId: message._id
+                    }
+                );
+
+            }
+
+
+            // ====================================================
+            // UPDATE CHAT LIST
+            // ====================================================
+
+            loadChats();
 
         }
+    );
 
-
-        // ====================================================
-        // UPDATE CHAT LIST
-        // ====================================================
-
-        loadChats();
-
-    }
-);
+}
 
 function showOptimisticMessage(message) {
 
