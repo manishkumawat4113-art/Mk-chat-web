@@ -2022,72 +2022,288 @@ loadChats();
 
 // ============================================================
 // AUTO LOGIN
+// PART 2C - OFFLINE FIRST
 // ============================================================
 
 window.addEventListener(
     "load",
-    function () {
+    async function () {
 
-        let savedUser =
-            localStorage.getItem(
-                "currentUser"
-            );
+        try {
 
+            // ------------------------------------------------
+            // Wait for IndexedDB
+            // ------------------------------------------------
 
-        let savedToken =
-            localStorage.getItem(
-                "token"
-            );
+            await MKOfflineDB.ready;
 
 
-        if (
-            savedUser &&
-            savedToken
-        ) {
+            // ------------------------------------------------
+            // Check REAL internet
+            // ------------------------------------------------
 
-            try {
+            const online =
+                await mkCheckRealInternet();
 
-                let user =
-                    JSON.parse(
-                        savedUser
+
+            // =================================================
+            // ONLINE
+            // =================================================
+
+            if (online) {
+
+                console.log(
+                    "🌐 AUTO LOGIN: Internet available"
+                );
+
+
+                // Existing local session
+                let savedUser =
+                    localStorage.getItem(
+                        "currentUser"
                     );
 
 
-                document.querySelector(
-                    "#userName"
-                ).textContent =
-                    user.username;
+                let savedToken =
+                    localStorage.getItem(
+                        "token"
+                    );
 
 
-                screen1.style.display =
-                    "none";
+                if (
+                    savedUser &&
+                    savedToken
+                ) {
+
+                    try {
+
+                        let user =
+                            JSON.parse(
+                                savedUser
+                            );
 
 
-                homeScreen.style.display =
-                    "block";
+                        document.querySelector(
+                            "#userName"
+                        ).textContent =
+                            user.username;
 
 
-                // Socket room
-                joinUserRoom();
-                
-                loadChats();
+                        screen1.style.display =
+                            "none";
+
+
+                        homeScreen.style.display =
+                            "block";
+
+
+                        // ------------------------------------
+                        // Online mode
+                        // ------------------------------------
+
+                        window.MK_OFFLINE_SESSION_ACTIVE =
+                            false;
+
+
+                        // ------------------------------------
+                        // Socket
+                        // ------------------------------------
+
+                        joinUserRoom();
+
+
+                        // ------------------------------------
+                        // Existing online chats
+                        // ------------------------------------
+
+                        loadChats();
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "❌ Online auto login error:",
+                            error
+                        );
+
+                    }
+
+                }
+
+                else {
+
+                    screen1.style.display =
+                        "block";
+
+                    homeScreen.style.display =
+                        "none";
+
+                }
+
+
+                return;
 
             }
 
-            catch (error) {
 
-                console.error(
-                    error
+            // =================================================
+            // OFFLINE
+            // =================================================
+
+            console.log(
+                "📴 AUTO LOGIN: Offline mode"
+            );
+
+
+            const session =
+                await MKOfflineSession.get();
+
+
+            // ------------------------------------------------
+            // No cached account
+            // ------------------------------------------------
+
+            if (
+                !session ||
+                !session.user ||
+                !session.userId
+            ) {
+
+                console.log(
+                    "ℹ️ No offline account available"
+                );
+
+
+                screen1.style.display =
+                    "block";
+
+
+                homeScreen.style.display =
+                    "none";
+
+
+                return;
+
+            }
+
+
+            // ------------------------------------------------
+            // Restore cached user
+            // ------------------------------------------------
+
+            const user =
+                session.user;
+
+
+            console.log(
+                "👤 Offline account:",
+                session.userId
+            );
+
+
+            // ------------------------------------------------
+            // Keep existing app state synchronized
+            // ------------------------------------------------
+
+            localStorage.setItem(
+                "currentUser",
+                JSON.stringify(
+                    user
+                )
+            );
+
+
+            if (session.token) {
+
+                localStorage.setItem(
+                    "token",
+                    session.token
                 );
 
             }
 
+
+            // ------------------------------------------------
+            // Username
+            // ------------------------------------------------
+
+            const userNameElement =
+                document.querySelector(
+                    "#userName"
+                );
+
+
+            if (
+                userNameElement &&
+                user.username
+            ) {
+
+                userNameElement.textContent =
+                    user.username;
+
+            }
+
+
+            // ------------------------------------------------
+            // Mark offline session
+            // ------------------------------------------------
+
+            window.MK_OFFLINE_SESSION_ACTIVE =
+                true;
+
+
+            window.MK_OFFLINE_USER =
+                user;
+
+
+            // ------------------------------------------------
+            // SHOW HOME
+            // ------------------------------------------------
+
+            screen1.style.display =
+                "none";
+
+
+            homeScreen.style.display =
+                "block";
+
+
+            console.log(
+                "✅ OFFLINE AUTO LOGIN SUCCESS"
+            );
+
+
+            // ------------------------------------------------
+            // IMPORTANT
+            //
+            // DON'T call:
+            // joinUserRoom()
+            // loadChats()
+            //
+            // because internet is OFF.
+            //
+            // Part 3 will load chats from IndexedDB.
+            // ------------------------------------------------
+
+
         }
 
-        else {
+        catch (error) {
+
+            console.error(
+                "❌ AUTO LOGIN ERROR:",
+                error
+            );
+
+
+            // ------------------------------------------------
+            // Safe fallback
+            // ------------------------------------------------
 
             screen1.style.display =
                 "block";
+
 
             homeScreen.style.display =
                 "none";
