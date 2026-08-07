@@ -1569,6 +1569,8 @@ function mkCreateSocket() {
 // ========================================================
 
 mkRegisterReceiveMessage();
+
+    mkRegisterChatUserStatus();
     // ========================================================
     // SOCKET CONNECTED
     // ========================================================
@@ -6163,55 +6165,135 @@ status.textContent =
 
 }
 
-socket.on("user_status", function(data) {
+// ============================================================
+// USER STATUS
+// PART 2D - SOCKET SAFE
+// ============================================================
 
-    let selectedUserId =
-        localStorage.getItem("selectedUserId");
+function mkRegisterChatUserStatus() {
 
-    if (String(data.userId) === String(selectedUserId)) {
+    if (!socket) {
 
-        if (data.isOnline) {
+        console.log(
+            "📴 User status listener skipped - socket offline"
+        );
 
-            document.querySelector("#chatStatus").textContent =
-                "🟢 Online";
+        return;
+    }
 
-        } else {
 
-            if (data.lastSeen) {
+    socket.on(
+        "user_status",
+        function (data) {
 
-                let time = new Date(data.lastSeen);
+            let selectedUserId =
+                localStorage.getItem(
+                    "selectedUserId"
+                );
 
-                document.querySelector("#chatStatus").textContent =
-                    "Last seen " + time.toLocaleString();
 
-            } else {
+            if (
+                String(data.userId) ===
+                String(selectedUserId)
+            ) {
 
-                document.querySelector("#chatStatus").textContent =
-                    "Offline";
+                if (data.isOnline) {
+
+                    const status =
+                        document.querySelector(
+                            "#chatStatus"
+                        );
+
+
+                    if (status) {
+
+                        status.textContent =
+                            "🟢 Online";
+
+                    }
+
+                }
+
+                else {
+
+                    const status =
+                        document.querySelector(
+                            "#chatStatus"
+                        );
+
+
+                    if (!status) {
+                        return;
+                    }
+
+
+                    if (data.lastSeen) {
+
+                        let time =
+                            new Date(
+                                data.lastSeen
+                            );
+
+
+                        status.textContent =
+                            "Last seen " +
+                            time.toLocaleString();
+
+                    }
+
+                    else {
+
+                        status.textContent =
+                            "Offline";
+
+                    }
+
+                }
 
             }
 
         }
-    }function scrollChatToBottom() {
+    );
+
+}
+
+
+// ============================================================
+// SCROLL CHAT TO BOTTOM
+// ============================================================
+
+function scrollChatToBottom() {
 
     const messages =
-        document.querySelector("#messages");
+        document.querySelector(
+            "#messages"
+        );
 
-    if (!messages) return;
 
-    requestAnimationFrame(() => {
+    if (!messages) {
+        return;
+    }
 
-        messages.scrollTop =
-            messages.scrollHeight;
 
-        setTimeout(() => {
+    requestAnimationFrame(
+        function () {
 
             messages.scrollTop =
                 messages.scrollHeight;
 
-        }, 100);
 
-    });
+            setTimeout(
+                function () {
+
+                    messages.scrollTop =
+                        messages.scrollHeight;
+
+                },
+                100
+            );
+
+        }
+    );
 
 }
 
