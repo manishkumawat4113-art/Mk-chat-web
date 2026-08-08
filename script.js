@@ -3921,8 +3921,11 @@ async function retryPendingMessages() {
 
     }
 }
-// ============================================================
-// SEND OR EDIT MESSAGE
+
+
+    // ============================================================
+// SEND MESSAGE
+// OFFLINE + ONLINE SAFE
 // ============================================================
 
 async function sendMessage() {
@@ -3948,11 +3951,12 @@ async function sendMessage() {
         );
 
         return;
+
     }
 
 
     // ========================================================
-    // NORMAL SEND MODE
+    // CURRENT USER
     // ========================================================
 
     let currentUser =
@@ -3983,101 +3987,654 @@ async function sendMessage() {
     }
 
 
-    if (!socket.connected) {
+    // ========================================================
+    // CREATE CLIENT MESSAGE ID
+    // ========================================================
 
-    const clientMessageId =
-        crypto.randomUUID();
+    let clientMessageId;
 
-    const pendingMessage = {
 
-        senderId: currentUser.id,
+    try {
 
-        receiverId: selectedUserId,
+        clientMessageId =
+            crypto.randomUUID();
 
-        text: text,
-
-        clientMessageId: clientMessageId,
-
-        replyTo: selectedReply
-            ? {
-                messageId:
-                    selectedReply._id,
-
-                senderId:
-                    selectedReply.senderId,
-
-                text:
-                    selectedReply.text
-            }
-            : null
-    };
-
-    queueMessage(
-        pendingMessage
-    );
-
-    messageInput.value = "";
-
-    selectedReply = null;
-
-    console.log(
-        "📦 Message queued:",
-        clientMessageId
-    );
-
-    return;
     }
 
-    // Send message through Socket.IO
-const clientMessageId =
-    crypto.randomUUID();
+    catch (error) {
 
-const outgoingMessage = {
+        clientMessageId =
+            "mk_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2);
 
-    senderId: currentUser.id,
+    }
 
-    receiverId: selectedUserId,
 
-    text: text,
+    // ========================================================
+    // CREATE MESSAGE
+    // ========================================================
 
-    clientMessageId:
-        clientMessageId,
-    
-createdAt: new Date().toISOString(),
-    
-    replyTo: selectedReply
-        ? {
-            messageId:
-                selectedReply._id,
+    const outgoingMessage = {
 
-            senderId:
-                selectedReply.senderId,
+        senderId:
+            currentUser.id,
 
-            text:
-                selectedReply.text
+        receiverId:
+            selectedUserId,
+
+        text:
+            text,
+
+        clientMessageId:
+            clientMessageId,
+
+        createdAt:
+            new Date().toISOString(),
+
+        replyTo:
+            selectedReply
+                ? {
+
+                    messageId:
+                        selectedReply._id,
+
+                    senderId:
+                        selectedReply.senderId,
+
+                    text:
+                        selectedReply.text
+
+                }
+                : null
+
+    };
+
+
+    // ========================================================
+    // CHECK SOCKET SAFELY
+    // ========================================================
+
+    const socketReady =
+        (
+            typeof mkSocketConnected ===
+            "function"
+        )
+            ? mkSocketConnected()
+            : (
+                typeof socket !== "undefined" &&
+                socket !== null &&
+                socket.connected === true
+            );
+
+
+    // ========================================================
+    // OFFLINE / SOCKET NOT CONNECTED
+    // ========================================================
+
+    if (!socketReady) {
+
+        console.log(
+            "📴 Socket unavailable - saving pending message"
+        );
+
+
+        try {
+
+            // Save to pending queue
+            await queueMessage(
+                outgoingMessage
+            );
+
+
+            // Show immediately on screen
+            showOptimisticMessage(
+                outgoingMessage
+            );
+
+
+            console.log(
+                "📦 Pending message saved:",
+                clientMessageId
+            );
+
         }
-        : null
-};
-    showOptimisticMessage(
-    outgoingMessage
-);
 
-socket.emit(
-    "send_message",
-    outgoingMessage
-);
+        catch (error) {
 
-// 👇 ISKE BAAD
-loadChats();
+            console.error(
+                "❌ Pending message save failed:",
+                error
+            );
 
-    // Clear input
-    messageInput.value = "";
-    selectedReply = null;
 
-document.querySelector("#replyPreview").style.display = "none";
+            alert(
+                "Message save nahi ho paaya."
+            );
+
+
+            return;
+
+        }
+
+
+        // Clear input
+        messageInput.value =
+            "";
+
+        selectedReply =
+            null;
+
+
+        const replyPreview =
+            document.querySelector(
+                "#replyPreview"
+            );
+
+
+        if (replyPreview) {
+
+            replyPreview.style.display =
+                "none";
+
+        }
+
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // ONLINE
+    // ========================================================
+
+    try {
+
+        console.log(
+            "🌐 Sending message online:",
+            clientMessageId
+        );
+
+
+        // Show immediately
+        showOptimisticMessage(
+            outgoingMessage
+        );
+
+
+        // Send through Socket Manager
+        const sent =
+            (
+                typeof mkSocketEmit ===
+                "function"
+            )
+                ? mkSocketEmit(
+                    "send_message",
+                    outgoingMessage
+                )
+                : false;
+
+
+        // ====================================================
+        // SOCKET SEND FAILED
+        // ====================================================
+
+        if (!sent) {
+
+            console.log(
+                "📴 Socket send failed - moving message to pending queue"
+            );
+
+
+            await queueMessage(
+                outgoingMessage
+            );
+
+        }
+
+
+        // ====================================================
+        // UPDATE CHAT LIST
+        // ====================================================
+
+        loadChats();
+
+
+        // ====================================================
+        // CLEAR INPUT
+        // ====================================================
+
+        messageInput.value =
+            "";
+
+        selectedReply =
+            null;
+
+
+        const replyPreview =
+            document.querySelector(
+                "#replyPreview"
+            );
+
+
+        if (replyPreview) {
+
+            replyPreview.style.display =
+                "none";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Send Message Error:",
+            error
+        );
+
+
+        // ====================================================
+        // LAST FALLBACK
+        // ====================================================
+
+        try {
+
+            await queueMessage(
+                outgoingMessage
+            );
+
+
+            console.log(
+                "📦 Message moved to pending queue"
+            );
+
+
+            messageInput.value =
+                "";
+
+            selectedReply =
+                null;
+
+        }
+
+        catch (queueError) {
+
+            console.error(
+                "❌ Pending queue failed:",
+                queueError
+            );
+
+
+            alert(
+                "Message send nahi ho paaya."
+            );
+
+        }
+
+    }
 
 }
+// ============================================================
+// SEND MESSAGE
+// OFFLINE + ONLINE SAFE
+// ============================================================
 
+async function sendMessage() {
+
+    let text =
+        messageInput.value.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    // ========================================================
+    // EDIT MODE
+    // ========================================================
+
+    if (editingMessageId) {
+
+        await editMessage(
+            editingMessageId,
+            text
+        );
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // CURRENT USER
+    // ========================================================
+
+    let currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "currentUser"
+            )
+        );
+
+
+    let selectedUserId =
+        localStorage.getItem(
+            "selectedUserId"
+        );
+
+
+    if (
+        !currentUser ||
+        !selectedUserId
+    ) {
+
+        alert(
+            "User information missing"
+        );
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // CREATE CLIENT MESSAGE ID
+    // ========================================================
+
+    let clientMessageId;
+
+
+    try {
+
+        clientMessageId =
+            crypto.randomUUID();
+
+    }
+
+    catch (error) {
+
+        clientMessageId =
+            "mk_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2);
+
+    }
+
+
+    // ========================================================
+    // CREATE MESSAGE
+    // ========================================================
+
+    const outgoingMessage = {
+
+        senderId:
+            currentUser.id,
+
+        receiverId:
+            selectedUserId,
+
+        text:
+            text,
+
+        clientMessageId:
+            clientMessageId,
+
+        createdAt:
+            new Date().toISOString(),
+
+        replyTo:
+            selectedReply
+                ? {
+
+                    messageId:
+                        selectedReply._id,
+
+                    senderId:
+                        selectedReply.senderId,
+
+                    text:
+                        selectedReply.text
+
+                }
+                : null
+
+    };
+
+
+    // ========================================================
+    // CHECK SOCKET SAFELY
+    // ========================================================
+
+    const socketReady =
+        (
+            typeof mkSocketConnected ===
+            "function"
+        )
+            ? mkSocketConnected()
+            : (
+                typeof socket !== "undefined" &&
+                socket !== null &&
+                socket.connected === true
+            );
+
+
+    // ========================================================
+    // OFFLINE / SOCKET NOT CONNECTED
+    // ========================================================
+
+    if (!socketReady) {
+
+        console.log(
+            "📴 Socket unavailable - saving pending message"
+        );
+
+
+        try {
+
+            // Save to pending queue
+            await queueMessage(
+                outgoingMessage
+            );
+
+
+            // Show immediately on screen
+            showOptimisticMessage(
+                outgoingMessage
+            );
+
+
+            console.log(
+                "📦 Pending message saved:",
+                clientMessageId
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Pending message save failed:",
+                error
+            );
+
+
+            alert(
+                "Message save nahi ho paaya."
+            );
+
+
+            return;
+
+        }
+
+
+        // Clear input
+        messageInput.value =
+            "";
+
+        selectedReply =
+            null;
+
+
+        const replyPreview =
+            document.querySelector(
+                "#replyPreview"
+            );
+
+
+        if (replyPreview) {
+
+            replyPreview.style.display =
+                "none";
+
+        }
+
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // ONLINE
+    // ========================================================
+
+    try {
+
+        console.log(
+            "🌐 Sending message online:",
+            clientMessageId
+        );
+
+
+        // Show immediately
+        showOptimisticMessage(
+            outgoingMessage
+        );
+
+
+        // Send through Socket Manager
+        const sent =
+            (
+                typeof mkSocketEmit ===
+                "function"
+            )
+                ? mkSocketEmit(
+                    "send_message",
+                    outgoingMessage
+                )
+                : false;
+
+
+        // ====================================================
+        // SOCKET SEND FAILED
+        // ====================================================
+
+        if (!sent) {
+
+            console.log(
+                "📴 Socket send failed - moving message to pending queue"
+            );
+
+
+            await queueMessage(
+                outgoingMessage
+            );
+
+        }
+
+
+        // ====================================================
+        // UPDATE CHAT LIST
+        // ====================================================
+
+        loadChats();
+
+
+        // ====================================================
+        // CLEAR INPUT
+        // ====================================================
+
+        messageInput.value =
+            "";
+
+        selectedReply =
+            null;
+
+
+        const replyPreview =
+            document.querySelector(
+                "#replyPreview"
+            );
+
+
+        if (replyPreview) {
+
+            replyPreview.style.display =
+                "none";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Send Message Error:",
+            error
+        );
+
+
+        // ====================================================
+        // LAST FALLBACK
+        // ====================================================
+
+        try {
+
+            await queueMessage(
+                outgoingMessage
+            );
+
+
+            console.log(
+                "📦 Message moved to pending queue"
+            );
+
+
+            messageInput.value =
+                "";
+
+            selectedReply =
+                null;
+
+        }
+
+        catch (queueError) {
+
+            console.error(
+                "❌ Pending queue failed:",
+                queueError
+            );
+
+
+            alert(
+                "Message send nahi ho paaya."
+            );
+
+        }
+
+    }
+
+                }
 // ============================================================
 // EDIT MESSAGE FUNCTION
 // ============================================================
@@ -7262,7 +7819,22 @@ console.log(
 
         window.MK_OFFLINE_USER =
             cachedUser;
+// ========================================================
+// LOAD OFFLINE CHAT LIST
+// ========================================================
 
+try {
+
+    await loadChats();
+
+} catch (error) {
+
+    console.warn(
+        "⚠️ Offline chat list load failed:",
+        error
+    );
+
+}
 
         console.log(
             "✅ Offline account restored successfully"
