@@ -1526,7 +1526,7 @@ function mkCreateSocket() {
     // Do not create Socket.IO connection while offline
     // --------------------------------------------------------
 
-    if (
+   /* if (
         window.MK_OFFLINE_SESSION_ACTIVE === true ||
         !mkIsRealInternetAvailable()
     ) {
@@ -1536,7 +1536,7 @@ function mkCreateSocket() {
         );
 
         return;
-    }
+    }*/
 
 
     console.log(
@@ -1568,9 +1568,9 @@ function mkCreateSocket() {
 // REGISTER REALTIME MESSAGE LISTENER
 // ========================================================
 
-mkRegisterReceiveMessage();
+//mkRegisterReceiveMessage();
 
-    mkRegisterChatUserStatus();
+ //   mkRegisterChatUserStatus();
     // ========================================================
     // SOCKET CONNECTED
     // ========================================================
@@ -1812,7 +1812,6 @@ window.addEventListener(
     }
 );
 
-
 // ============================================================
 // WHEN INTERNET GOES OFFLINE
 // ============================================================
@@ -1822,36 +1821,18 @@ window.addEventListener(
     function () {
 
         console.log(
-            "📴 Internet lost - stopping Socket.IO"
+            "📴 Internet lost - Socket remains available"
         );
-
 
         mkRealInternetAvailable =
             false;
 
+        window.MK_OFFLINE_SESSION_ACTIVE =
+            true;
 
-        if (socket) {
-
-            try {
-
-                socket.disconnect();
-
-            }
-
-            catch (error) {
-
-                console.warn(
-                    "⚠️ Socket disconnect error:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        socket =
-            null;
+        // IMPORTANT:
+        // socket = null ❌ नहीं करना
+        // Socket.IO object बना रहेगा.
 
     }
 );
